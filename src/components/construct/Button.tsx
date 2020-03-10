@@ -8,8 +8,8 @@ import {
     StyleSheet,
 } from 'react-native';
 
-import { colors } from '../lib/constants';
-import { getStyleWithMod } from '../lib/getStyleWithMod';
+import { colors } from '../../lib/constants';
+import { getStyleWithMod } from '../../lib/getStyleWithMod';
 
 interface IButtonProps {
     title: string;

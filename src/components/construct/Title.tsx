@@ -1,8 +1,8 @@
 import React from 'react';
 import { StyleSheet, Text } from 'react-native';
-import { colors } from '../lib/constants';
+import { colors } from '../../lib/constants';
 
-import { getStyleWithMod } from '../lib/getStyleWithMod';
+import { getStyleWithMod } from '../../lib/getStyleWithMod';
 
 export interface ITitleProps {
     size: 'm' | 'l';
