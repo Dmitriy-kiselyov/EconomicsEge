@@ -1,14 +1,14 @@
 import fs from 'react-native-fs';
 
-import { ILevel, ITasks } from '../typings/tasks';
+import { ILevel, IAllTasks } from '../typings/tasks';
 
 interface IDirOutput {
     path: string;
     name: string;
 }
 
-export async function getTasks(): Promise<ITasks> {
-    const tasks: ITasks = {
+export async function getTasks(): Promise<IAllTasks> {
+    const allTasks: IAllTasks = {
         exams: [
             {
                 title: 'ОГЭ',
@@ -25,19 +25,27 @@ export async function getTasks(): Promise<ITasks> {
 
     for (const test of tests) {
         const levels = await getDirOutput(test.path);
+        const tasksLevels = [];
 
-        const tasksLevels: ILevel[] = levels.map(level => ({
-            title: level.name,
-            tasks: [],
-        }));
+        for (const level of levels) {
+            const tasks = await getFileOutput(level.path);
 
-        tasks.tests.push({
+            tasksLevels.push({
+                title: level.name,
+                tasks: tasks.map(task => ({
+                    title: task,
+                    text: null,
+                })),
+            });
+        }
+
+        allTasks.tests.push({
             title: test.name,
             levels: tasksLevels,
         });
     }
 
-    return tasks;
+    return allTasks;
 }
 
 export async function getDirOutput(path: string): Promise<IDirOutput[]> {
@@ -49,4 +57,12 @@ export async function getDirOutput(path: string): Promise<IDirOutput[]> {
             path: test.path,
             name: test.name.split('.')[1]
         }));
+}
+
+export async function getFileOutput(path: string): Promise<string[]> {
+    const files = await fs.readDirAssets(path);
+
+    return files
+        .filter(file => file.isFile())
+        .map(file => file.name);
 }

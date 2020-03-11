@@ -5,10 +5,10 @@ import { Button } from './construct/Button';
 import { Title } from './construct/Title';
 import { TestSnippet } from './TestSnippet';
 import { getTasks } from '../lib/getTasks';
-import { ITasks } from '../typings/tasks';
+import { IAllTasks } from '../typings/tasks';
 
 interface IState {
-    tasks: ITasks | null;
+    tasks: IAllTasks | null;
 }
 
 export class App extends React.PureComponent<{}, IState> {
@@ -33,7 +33,7 @@ export class App extends React.PureComponent<{}, IState> {
         );
     }
 
-    private renderTasks(tasks: ITasks): React.ReactElement {
+    private renderTasks(tasks: IAllTasks): React.ReactElement {
         return (
             <>
                 <Title size="l" title="Экзамены" center />
@@ -55,7 +55,7 @@ export class App extends React.PureComponent<{}, IState> {
                             style={styles.margin}
                             title={test.title}
                             key={test.title}
-                            levels={test.levels.map(level => level.title)}
+                            levels={test.levels}
                         />
                     ))
                 }

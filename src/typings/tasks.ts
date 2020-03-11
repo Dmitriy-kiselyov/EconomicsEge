@@ -1,4 +1,4 @@
-export interface ITasks {
+export interface IAllTasks {
     exams: IExam[];
     tests: ITest[];
 }

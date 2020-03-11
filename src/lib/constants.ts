@@ -4,4 +4,5 @@ export const colors = {
     primaryDark: '#3700B3',
     black: '#333',
     white: '#fff',
+    grey: '#666',
 };
