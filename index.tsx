@@ -2,14 +2,12 @@ import React from 'react';
 import { AppRegistry } from 'react-native';
 import { Provider } from 'react-redux';
 
-import { App } from './src/components/App';
+import { Root } from './src/components/Root';
 import { name as appName } from './app.json';
 import { store } from './src/store/store';
 
-const Root = () => (
+AppRegistry.registerComponent(appName, () => () => (
     <Provider store={store}>
-        <App />
+        <Root />
     </Provider>
-);
-
-AppRegistry.registerComponent(appName, () => Root);
+));

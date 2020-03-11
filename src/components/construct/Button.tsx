@@ -13,7 +13,7 @@ import { getStyleWithMod } from '../../lib/getStyleWithMod';
 
 interface IButtonProps {
     title: string;
-    onPress?: () => void;
+    onClick?: () => void;
     size: 'm' | 'l';
     outline?: boolean;
     style?: object;
@@ -38,7 +38,7 @@ export const Button: React.FC<IButtonProps> = props => {
 
     return (
         <View style={buttonStyle}>
-            <Touchable accessibilityRole="button" onPress={props.onPress}>
+            <Touchable accessibilityRole="button" onPress={props.onClick}>
                 <View style={styles.touchable}>
                     <Text style={textStyle}>{title}</Text>
                 </View>

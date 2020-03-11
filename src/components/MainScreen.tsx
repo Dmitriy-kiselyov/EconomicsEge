@@ -4,7 +4,7 @@ import { connect, DispatchProp } from 'react-redux';
 
 import { Button } from './construct/Button';
 import { Title } from './construct/Title';
-import { TestSnippet } from './TestSnippet';
+import { TestInfo } from './TestInfo';
 import { getTasks } from '../lib/getTasks';
 import { ITasksCollection } from '../typings/tasks';
 import { setTasks } from '../store/setTasks';
@@ -16,7 +16,7 @@ interface IConnectProps {
 
 type IAppProps = IConnectProps & DispatchProp;
 
-export class AppPresenter extends React.PureComponent<IAppProps> {
+export class MainActivityPresenter extends React.PureComponent<IAppProps> {
     componentDidMount(): void {
         if (this.props.tasks == null) {
             getTasks().then(tasks => this.props.dispatch(setTasks(tasks)));
@@ -29,7 +29,6 @@ export class AppPresenter extends React.PureComponent<IAppProps> {
         return (
             <View style={styles.app}>
                 {
-                    // @ts-ignore Ты че сука пишешь
                     tasks ? this.renderTasks(tasks) : null
                 }
             </View>
@@ -54,7 +53,7 @@ export class AppPresenter extends React.PureComponent<IAppProps> {
                 <Title size="l" title="Тесты" style={styles.margin} center />
                 {
                     tasks.tests.map(test => (
-                        <TestSnippet
+                        <TestInfo
                             style={styles.margin}
                             title={test.title}
                             key={test.title}
@@ -81,8 +80,8 @@ const styles = StyleSheet.create({
     },
 });
 
-export const App = connect(
+export const MainScreen = connect(
     (state: IStore): IConnectProps => ({
         tasks: state.tasks,
     })
-)(AppPresenter);
+)(MainActivityPresenter);
