@@ -9,6 +9,7 @@ import { getTasks } from '../lib/getTasks';
 import { ITasksCollection } from '../typings/tasks';
 import { setTasks } from '../store/setTasks';
 import { IStore } from '../typings/store';
+import { margins } from '../lib/constants';
 
 interface IConnectProps {
     tasks: ITasksCollection | null;
@@ -27,7 +28,7 @@ export class MainActivityPresenter extends React.PureComponent<IAppProps> {
         const { tasks } = this.props;
 
         return (
-            <View style={styles.app}>
+            <View style={styles.screen}>
                 {
                     tasks ? this.renderTasks(tasks) : null
                 }
@@ -67,12 +68,12 @@ export class MainActivityPresenter extends React.PureComponent<IAppProps> {
 }
 
 const styles = StyleSheet.create({
-    app: {
+    screen: {
         flex: 1,
-        margin: 16,
+        margin: margins.l,
     },
     margin: {
-        marginTop: 16,
+        marginTop: margins.l,
     },
     topButtons: {
         flexDirection: 'row',

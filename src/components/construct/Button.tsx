@@ -1,14 +1,8 @@
 import React from 'react';
-import {
-    Platform,
-    Text,
-    View,
-    TouchableNativeFeedback,
-    TouchableOpacity,
-    StyleSheet,
-} from 'react-native';
+import { Text, View, StyleSheet } from 'react-native';
 
-import { colors } from '../../lib/constants';
+import { Touchable } from './Touchable';
+import { colors, margins } from '../../lib/constants';
 import { getStyleWithMod } from '../../lib/getStyleWithMod';
 
 interface IButtonProps {
@@ -17,12 +11,11 @@ interface IButtonProps {
     size: 'm' | 'l';
     outline?: boolean;
     style?: object;
+    delay?: boolean;
 }
 
 export const Button: React.FC<IButtonProps> = props => {
     const title = props.title.toUpperCase();
-    const Touchable =
-        Platform.OS === 'android' ? TouchableNativeFeedback : TouchableOpacity;
     const buttonStyle = getStyleWithMod(styles, 'button', {
         size: props.size,
         outline: props.outline,
@@ -38,7 +31,7 @@ export const Button: React.FC<IButtonProps> = props => {
 
     return (
         <View style={buttonStyle}>
-            <Touchable accessibilityRole="button" onPress={props.onClick}>
+            <Touchable onClick={props.onClick} delay={props.delay}>
                 <View style={styles.touchable}>
                     <Text style={textStyle}>{title}</Text>
                 </View>
@@ -76,8 +69,8 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         textAlignVertical: 'center',
         flex: 1,
-        margin: 8,
-        marginHorizontal: 16,
+        margin: margins.m,
+        marginHorizontal: margins.l,
         fontWeight: '700',
         color: colors.white,
     },

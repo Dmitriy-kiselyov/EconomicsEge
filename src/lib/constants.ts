@@ -6,3 +6,9 @@ export const colors = {
     white: '#fff',
     grey: '#666',
 };
+
+export const margins = {
+    s: 4,
+    m: 8,
+    l: 16
+};

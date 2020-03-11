@@ -6,7 +6,7 @@ import { Title } from './construct/Title';
 import { Button } from './construct/Button';
 import { ILevel } from '../typings/tasks';
 import { IMultiLang, multiLang } from '../lib/multiLang';
-import { colors } from '../lib/constants';
+import { colors, margins } from '../lib/constants';
 import { openLevel } from '../store/openLevel';
 
 export interface ITestSnippetProps {
@@ -32,7 +32,8 @@ export const TestInfo: React.FC<ITestSnippetProps> = props => {
                 size="m"
                 key={level.title}
                 outline
-                onClick={() => setTimeout(() => dispatch(openLevel(level.id)), 300)} // анимация нажатия
+                delay
+                onClick={() => dispatch(openLevel(level.id))}
             />
             <Text style={styles.info}>
                 {
@@ -54,14 +55,14 @@ const styles = StyleSheet.create({
     levels: {
         flexDirection: 'row',
         justifyContent: 'flex-start',
-        marginTop: 8,
+        marginTop: margins.m,
     },
     info: {
         textAlign: 'center',
         color: colors.grey,
-        marginTop: 4,
+        marginTop: margins.s,
     },
     marginLeft: {
-        marginLeft: 8,
+        marginLeft: margins.m,
     },
 });

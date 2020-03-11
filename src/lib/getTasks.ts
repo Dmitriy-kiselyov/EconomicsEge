@@ -65,5 +65,10 @@ export async function getFileOutput(path: string): Promise<string[]> {
 
     return files
         .filter(file => file.isFile())
-        .map(file => file.name);
+        .map(file => getFileName(file.name))
+        .sort((a, b) => +a - +b);
+}
+
+function getFileName(fileName: string): string {
+    return fileName.split('.')[0];
 }
