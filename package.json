@@ -11,9 +11,12 @@
     "assets": "npx react-native-asset"
   },
   "dependencies": {
+    "@types/react-redux": "^7.1.7",
     "react": "16.9.0",
     "react-native": "0.61.5",
-    "react-native-fs": "^2.16.6"
+    "react-native-fs": "^2.16.6",
+    "react-redux": "^7.2.0",
+    "redux": "^4.0.5"
   },
   "devDependencies": {
     "@babel/core": "7.8.7",

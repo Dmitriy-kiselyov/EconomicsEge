@@ -1,14 +1,14 @@
 import fs from 'react-native-fs';
 
-import { ILevel, IAllTasks } from '../typings/tasks';
+import { ITasksCollection } from '../typings/tasks';
 
 interface IDirOutput {
     path: string;
     name: string;
 }
 
-export async function getTasks(): Promise<IAllTasks> {
-    const allTasks: IAllTasks = {
+export async function getTasks(): Promise<ITasksCollection> {
+    const tasksCollection: ITasksCollection = {
         exams: [
             {
                 title: 'ОГЭ',
@@ -36,16 +36,17 @@ export async function getTasks(): Promise<IAllTasks> {
                     title: task,
                     text: null,
                 })),
+                id: level.path,
             });
         }
 
-        allTasks.tests.push({
+        tasksCollection.tests.push({
             title: test.name,
             levels: tasksLevels,
         });
     }
 
-    return allTasks;
+    return tasksCollection;
 }
 
 export async function getDirOutput(path: string): Promise<IDirOutput[]> {

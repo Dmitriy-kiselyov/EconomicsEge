@@ -1,4 +1,4 @@
-export interface IAllTasks {
+export interface ITasksCollection {
     exams: IExam[];
     tests: ITest[];
 }
@@ -14,6 +14,7 @@ export interface ITest {
 }
 
 export interface ILevel {
+    id: string;
     title: string;
     tasks: ITask[];
 }

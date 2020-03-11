@@ -1,27 +1,30 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
+import { connect, DispatchProp } from 'react-redux';
 
 import { Button } from './construct/Button';
 import { Title } from './construct/Title';
 import { TestSnippet } from './TestSnippet';
 import { getTasks } from '../lib/getTasks';
-import { IAllTasks } from '../typings/tasks';
+import { ITasksCollection } from '../typings/tasks';
+import { setTasks } from '../store/setTasks';
+import { IStore } from '../typings/store';
 
-interface IState {
-    tasks: IAllTasks | null;
+interface IConnectProps {
+    tasks: ITasksCollection | null;
 }
 
-export class App extends React.PureComponent<{}, IState> {
-    public state = {
-        tasks: null,
-    };
+type IAppProps = IConnectProps & DispatchProp;
 
+export class AppPresenter extends React.PureComponent<IAppProps> {
     componentDidMount(): void {
-        getTasks().then(tasks => this.setState({ tasks }));
+        if (this.props.tasks == null) {
+            getTasks().then(tasks => this.props.dispatch(setTasks(tasks)));
+        }
     }
 
     render() {
-        const { tasks } = this.state;
+        const { tasks } = this.props;
 
         return (
             <View style={styles.app}>
@@ -33,7 +36,7 @@ export class App extends React.PureComponent<{}, IState> {
         );
     }
 
-    private renderTasks(tasks: IAllTasks): React.ReactElement {
+    private renderTasks(tasks: ITasksCollection): React.ReactElement {
         return (
             <>
                 <Title size="l" title="Экзамены" center />
@@ -77,3 +80,9 @@ const styles = StyleSheet.create({
         justifyContent: 'space-evenly',
     },
 });
+
+export const App = connect(
+    (state: IStore): IConnectProps => ({
+        tasks: state.tasks,
+    })
+)(AppPresenter);
