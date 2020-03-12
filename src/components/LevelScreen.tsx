@@ -8,6 +8,10 @@ import { IStore } from '../typings/store';
 import { Title } from './construct/Title';
 import { margins } from '../lib/constants';
 import { TaskCard } from './construct/TaskCard';
+import { getTaskText } from '../lib/getTaskText';
+import { findLevel, IFindLevelResult } from '../lib/storeHelpers';
+import { setTaskText } from '../store/setTaskText';
+import { fetchTaskText } from '../lib/fetchTaskText';
 
 interface IConnectProps {
     level: ILevel;
@@ -65,7 +69,7 @@ export class LevelScreenPresenter extends React.PureComponent<ILevelScreenProps>
     }
 
     private renderCell = (item: ListRenderItemInfo<ITask | IEmptyCell>): React.ReactElement => {
-        const { item: task, index } = item;
+        let { item: task, index } = item;
         const style: object[] = [styles.cell];
 
         if (index % columns === 0) {
@@ -86,10 +90,16 @@ export class LevelScreenPresenter extends React.PureComponent<ILevelScreenProps>
             );
         }
 
+        task = task as ITask;
+
+        if (!task.text) {
+            fetchTaskText(this.props.dispatch, this.props.level.id, task.path);
+        }
+
         return (
             <TaskCard
-                title={(task as ITask).title}
-                text="У мальчика Пети было 2 яблока, а у девочки Наташи было 1 яблоко"
+                title={task.title}
+                text={task.text || 'Загрузка...'}
                 style={style}
             />
         )
@@ -132,20 +142,11 @@ const styles = StyleSheet.create({
 
 export const LevelScreen = connect(
     (state: IStore): IConnectProps => {
-        const tests = state.tasks?.tests as ITest[];
+        const { test, level } = findLevel(state, state.openedLevel as string) as IFindLevelResult;
 
-        for (const test of tests) {
-            for (const level of test.levels) {
-                if (level.id === state.openedLevel) {
-                    return {
-                        level,
-                        testName: test.title
-                    };
-                }
-            }
-        }
-
-        // @ts-ignore невозможно
-        return null;
+        return {
+            level,
+            testName: test.title
+        };
     }
 )(LevelScreenPresenter);

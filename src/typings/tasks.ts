@@ -21,5 +21,6 @@ export interface ILevel {
 
 export interface ITask {
     title: string;
+    path: string;
     text: string | null;
 }

@@ -39,8 +39,8 @@ export const TaskCard: React.FC<ITaskCardProps> = props => {
 const styles = StyleSheet.create({
     card: {
         backgroundColor: colors.white,
-        borderColor: colors.primaryDark,
-        borderWidth: 2,
+        borderColor: colors.primary,
+        borderWidth: 3,
         borderRadius: 10,
         elevation: 5,
     },
@@ -56,5 +56,6 @@ const styles = StyleSheet.create({
     text: {
         color: colors.grey,
         fontSize: 15,
+        height: 65,
     }
 });

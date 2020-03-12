@@ -6,7 +6,7 @@ import { Button } from './construct/Button';
 import { Title } from './construct/Title';
 import { TestInfo } from './TestInfo';
 import { getTasks } from '../lib/getTasks';
-import { ITasksCollection } from '../typings/tasks';
+import { IExam, ITasksCollection } from '../typings/tasks';
 import { setTasks } from '../store/setTasks';
 import { IStore } from '../typings/store';
 import { margins } from '../lib/constants';

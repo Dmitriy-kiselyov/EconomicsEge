@@ -1,6 +1,6 @@
 import fs from 'react-native-fs';
 
-import { ITasksCollection } from '../typings/tasks';
+import { ITask, ITasksCollection } from '../typings/tasks';
 
 interface IDirOutput {
     path: string;
@@ -32,10 +32,7 @@ export async function getTasks(): Promise<ITasksCollection> {
 
             tasksLevels.push({
                 title: level.name,
-                tasks: tasks.map(task => ({
-                    title: task,
-                    text: null,
-                })),
+                tasks,
                 id: level.path,
             });
         }
@@ -60,13 +57,17 @@ export async function getDirOutput(path: string): Promise<IDirOutput[]> {
         }));
 }
 
-export async function getFileOutput(path: string): Promise<string[]> {
+export async function getFileOutput(path: string): Promise<ITask[]> {
     const files = await fs.readDirAssets(path);
 
     return files
         .filter(file => file.isFile())
-        .map(file => getFileName(file.name))
-        .sort((a, b) => +a - +b);
+        .map(file => ({
+            title: getFileName(file.name),
+            path: file.path,
+            text: null,
+        }))
+        .sort((a, b) => +a.title - +b.title);
 }
 
 function getFileName(fileName: string): string {
