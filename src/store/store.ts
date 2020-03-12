@@ -1,7 +1,9 @@
 import { createStore } from 'redux';
 
 import { IStore } from '../typings/store';
-import { ACTION_TYPES, IActionOpenLevel, IActions, IActionSetTasks, IActionSetTaskText } from '../typings/actions';
+import {
+    ACTION_TYPES, IActionOpenLevel, IActionOpenTask, IActions, IActionSetTasks, IActionSetTaskText
+} from '../typings/actions';
 import { ILevel, ITask, ITasksCollection, ITest } from '../typings/tasks';
 import { findLevel, IFindLevelResult } from '../lib/storeHelpers';
 
@@ -19,6 +21,10 @@ function reducer(state: IStore | undefined, action: IActions): IStore {
             return reduceCloseLevel(state);
         case ACTION_TYPES.SET_TASK_TEXT:
             return reduceSetTaskText(state, action);
+        case ACTION_TYPES.OPEN_TASK:
+            return reduceOpenTask(state, action);
+        case ACTION_TYPES.CLOSE_TASK:
+            return reduceCloseTask(state);
         default:
             return state;
     }
@@ -62,6 +68,20 @@ function reduceSetTaskText(state: IStore, action: IActionSetTaskText): IStore {
     return state;
 }
 
+function reduceOpenTask(state: IStore, action: IActionOpenTask): IStore {
+    return {
+        ...state,
+        openedTask: action.task.path,
+    }
+}
+
+function reduceCloseTask(state: IStore): IStore {
+    return {
+        ...state,
+        openedTask: null
+    }
+}
+
 // TODO: передалать store в плоский список
 function cloneTask(state: IStore, test: ITest, level: ILevel, oldTask: ITask, newTask: ITask): IStore {
     const clonedTasks = cloneArray(level.tasks, oldTask, newTask);
@@ -92,7 +112,8 @@ function cloneArray<T>(array: T[], oldObject: T, newObject: T): T[] {
 
 const initialStore: IStore = {
     tasks: null,
-    openedLevel: null
+    openedLevel: null,
+    openedTask: null,
 };
 
 export const store = createStore(

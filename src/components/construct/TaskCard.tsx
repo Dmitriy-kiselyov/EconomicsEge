@@ -8,6 +8,7 @@ export interface ITaskCardProps {
     title: string;
     text: string;
     style?: object;
+    onClick?: () => void;
 }
 
 export const TaskCard: React.FC<ITaskCardProps> = props => {
@@ -19,7 +20,7 @@ export const TaskCard: React.FC<ITaskCardProps> = props => {
 
     return (
         <View style={style}>
-            <Touchable>
+            <Touchable delay onClick={props.onClick}>
                 <View style={styles.padding}>
                     <Text style={styles.title}>
                         {props.title}

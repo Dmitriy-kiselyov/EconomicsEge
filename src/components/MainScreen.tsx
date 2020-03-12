@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, ScrollView } from 'react-native';
 import { connect, DispatchProp } from 'react-redux';
 
 import { Button } from './construct/Button';
@@ -28,11 +28,13 @@ export class MainActivityPresenter extends React.PureComponent<IAppProps> {
         const { tasks } = this.props;
 
         return (
-            <View style={styles.screen}>
-                {
-                    tasks ? this.renderTasks(tasks) : null
-                }
-            </View>
+            <ScrollView>
+                <View style={styles.screen}>
+                    {
+                        tasks ? this.renderTasks(tasks) : null
+                    }
+                </View>
+            </ScrollView>
         );
     }
 
@@ -70,7 +72,7 @@ export class MainActivityPresenter extends React.PureComponent<IAppProps> {
 const styles = StyleSheet.create({
     screen: {
         flex: 1,
-        margin: margins.l,
+        padding: margins.l,
     },
     margin: {
         marginTop: margins.l,

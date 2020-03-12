@@ -1,17 +1,17 @@
 import React from 'react';
-import { BackHandler, StyleSheet, View, FlatList, ListRenderItemInfo } from 'react-native';
+import { StyleSheet, View, FlatList, ListRenderItemInfo } from 'react-native';
 import { connect, DispatchProp } from 'react-redux';
 
 import { closeLevel } from '../store/closeLevel';
-import { ILevel, ITask, ITest } from '../typings/tasks';
+import { ILevel, ITask } from '../typings/tasks';
 import { IStore } from '../typings/store';
 import { Title } from './construct/Title';
 import { margins } from '../lib/constants';
 import { TaskCard } from './construct/TaskCard';
-import { getTaskText } from '../lib/getTaskText';
 import { findLevel, IFindLevelResult } from '../lib/storeHelpers';
-import { setTaskText } from '../store/setTaskText';
 import { fetchTaskText } from '../lib/fetchTaskText';
+import { BackListener } from './construct/BackListener';
+import { openTasks } from '../store/openTask';
 
 interface IConnectProps {
     level: ILevel;
@@ -26,15 +26,7 @@ interface IEmptyCell {
 
 const columns = 2;
 
-export class LevelScreenPresenter extends React.PureComponent<ILevelScreenProps> {
-    componentDidMount(): void {
-        BackHandler.addEventListener('hardwareBackPress', this.handleBack);
-    }
-
-    componentWillUnmount(): void {
-        BackHandler.removeEventListener('hardwareBackPress', this.handleBack);
-    }
-
+export class LevelScreenPresenter extends BackListener<ILevelScreenProps> {
     render() {
         return (
             <View style={styles.screen}>
@@ -101,11 +93,12 @@ export class LevelScreenPresenter extends React.PureComponent<ILevelScreenProps>
                 title={task.title}
                 text={task.text || 'Загрузка...'}
                 style={style}
+                onClick={() => this.props.dispatch(openTasks(task as ITask))}
             />
         )
     };
 
-    private handleBack = () => {
+    protected handleBack = () => {
         this.props.dispatch(closeLevel());
 
         return true;

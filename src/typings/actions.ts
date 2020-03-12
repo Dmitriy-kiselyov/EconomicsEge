@@ -1,10 +1,12 @@
-import { ITasksCollection } from './tasks';
+import { ITask, ITasksCollection } from './tasks';
 
 export enum ACTION_TYPES {
     SET_TASKS = 'SET_TASKS',
     OPEN_LEVEL = 'OPEN_LEVEL',
     CLOSE_LEVEL = 'CLOSE_LEVEL',
-    SET_TASK_TEXT = 'SET_TASK_TEXT'
+    SET_TASK_TEXT = 'SET_TASK_TEXT',
+    OPEN_TASK = 'OPEN_TASK',
+    CLOSE_TASK = 'CLOSE_TASK'
 }
 
 export interface IActionSetTasks {
@@ -28,4 +30,13 @@ export interface IActionSetTaskText {
     text: string;
 }
 
-export type IActions = IActionSetTasks | IActionOpenLevel | IActionCloseLevel | IActionSetTaskText;
+export interface IActionOpenTask {
+    type: ACTION_TYPES.OPEN_TASK;
+    task: ITask;
+}
+
+export interface IActionCloseTask {
+    type: ACTION_TYPES.CLOSE_TASK;
+}
+
+export type IActions = IActionSetTasks | IActionOpenLevel | IActionCloseLevel | IActionSetTaskText | IActionOpenTask | IActionCloseTask;
