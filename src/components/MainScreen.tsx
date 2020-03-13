@@ -1,12 +1,13 @@
 import React from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
 import { connect, DispatchProp } from 'react-redux';
+import SplashScreen from 'react-native-splash-screen';
 
 import { Button } from './construct/Button';
 import { Title } from './construct/Title';
 import { TestInfo } from './TestInfo';
 import { getTasks } from '../lib/getTasks';
-import { IExam, ITasksCollection } from '../typings/tasks';
+import { ITasksCollection } from '../typings/tasks';
 import { setTasks } from '../store/setTasks';
 import { IStore } from '../typings/store';
 import { margins } from '../lib/constants';
@@ -20,7 +21,11 @@ type IAppProps = IConnectProps & DispatchProp;
 export class MainActivityPresenter extends React.PureComponent<IAppProps> {
     componentDidMount(): void {
         if (this.props.tasks == null) {
-            getTasks().then(tasks => this.props.dispatch(setTasks(tasks)));
+            getTasks().then(tasks => {
+                this.props.dispatch(setTasks(tasks));
+
+                SplashScreen.hide();
+            });
         }
     }
 
