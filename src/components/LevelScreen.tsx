@@ -4,14 +4,14 @@ import { connect, DispatchProp } from 'react-redux';
 
 import { closeLevel } from '../store/closeLevel';
 import { ILevel, ITask } from '../typings/tasks';
-import { IStore } from '../typings/store';
+import { IFulfilledStore } from '../typings/store';
 import { Title } from './construct/Title';
 import { margins } from '../lib/constants';
 import { TaskCard } from './construct/TaskCard';
-import { findLevel, IFindLevelResult } from '../lib/storeHelpers';
 import { fetchTaskText } from '../lib/fetchTaskText';
 import { BackListener } from './construct/BackListener';
 import { openTasks } from '../store/openTask';
+import { getLevelFromStore } from '../lib/getLevelFromStore';
 
 interface IConnectProps {
     level: ILevel;
@@ -91,7 +91,7 @@ export class LevelScreenPresenter extends BackListener<ILevelScreenProps> {
         return (
             <TaskCard
                 title={task.title}
-                text={task.text || 'Загрузка...'}
+                text={task.text}
                 style={style}
                 onClick={() => this.props.dispatch(openTasks(task as ITask))}
             />
@@ -134,12 +134,12 @@ const styles = StyleSheet.create({
 });
 
 export const LevelScreen = connect(
-    (state: IStore): IConnectProps => {
-        const { test, level } = findLevel(state, state.openedLevel as string) as IFindLevelResult;
+    (state: IFulfilledStore): IConnectProps => {
+        const level = getLevelFromStore(state, state.openedLevel as string) as ILevel;
 
         return {
             level,
-            testName: test.title
+            testName: state.levels[state.openedLevel as string].testTitle
         };
     }
 )(LevelScreenPresenter);

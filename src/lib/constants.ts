@@ -5,6 +5,7 @@ export const colors = {
     black: '#333',
     white: '#fff',
     grey: '#666',
+    lightGrey: '#e5e5e5'
 };
 
 export const margins = {

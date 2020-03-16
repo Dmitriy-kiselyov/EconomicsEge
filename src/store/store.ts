@@ -1,11 +1,9 @@
 import { createStore } from 'redux';
 
-import { IStore } from '../typings/store';
+import { IStore, IStoreExam, IStoreLevels, IStoreTasks, IStoreTest } from '../typings/store';
 import {
     ACTION_TYPES, IActionOpenLevel, IActionOpenTask, IActions, IActionSetTasks, IActionSetTaskText
 } from '../typings/actions';
-import { ILevel, ITask, ITasksCollection, ITest } from '../typings/tasks';
-import { findLevel, IFindLevelResult } from '../lib/storeHelpers';
 
 function reducer(state: IStore | undefined, action: IActions): IStore {
     if (!state) {
@@ -31,10 +29,46 @@ function reducer(state: IStore | undefined, action: IActions): IStore {
 }
 
 function reduceSetTasks(state: IStore, action: IActionSetTasks): IStore {
+    const { tasksCollection } = action;
+
+    const exams: IStoreExam[] = tasksCollection.exams.map(exam => ({
+        title: exam.title,
+        tasks: exam.tasks.map(task => task.path)
+    }));
+    const tests: IStoreTest[] = tasksCollection.tests.map(test => ({
+        title: test.title,
+        levels: test.levels.map(level => level.id)
+    }));
+    const levels: IStoreLevels = {};
+    const tasks: IStoreTasks = {};
+
+    for (const exam of tasksCollection.exams) {
+        for (const task of exam.tasks) {
+            tasks[task.path] = task;
+        }
+    }
+    for (const test of tasksCollection.tests) {
+        for (const level of test.levels) {
+            levels[level.id] = {
+                id: level.id,
+                title: level.title,
+                testTitle: test.title,
+                tasks: level.tasks.map(task => task.path)
+            };
+
+            for (const task of level.tasks) {
+                tasks[task.path] = task;
+            }
+        }
+    }
+
     return {
         ...state,
-        tasks: action.tasksCollection
-    }
+        exams,
+        tests,
+        levels,
+        tasks
+    };
 }
 
 function reduceOpenLevel(state: IStore, action: IActionOpenLevel): IStore {
@@ -52,20 +86,20 @@ function reduceCloseLevel(state: IStore): IStore {
 }
 
 function reduceSetTaskText(state: IStore, action: IActionSetTaskText): IStore {
-    const { test, level } = findLevel(state, action.levelId) as IFindLevelResult;
-
-    for (const task of level.tasks) {
-        if (task.path === action.path) {
-            const newTask = {
-                ...task,
-                text: action.text
-            };
-
-            return cloneTask(state, test, level, task, newTask);
-        }
+    if (!state.tasks) {
+        return state;
     }
 
-    return state;
+    const task = state.tasks[action.path];
+    const newTask = { ...task, text: action.text };
+
+    return {
+        ...state,
+        tasks: {
+            ...state.tasks,
+            [action.path]: newTask
+        }
+    };
 }
 
 function reduceOpenTask(state: IStore, action: IActionOpenTask): IStore {
@@ -82,36 +116,12 @@ function reduceCloseTask(state: IStore): IStore {
     }
 }
 
-// TODO: передалать store в плоский список
-function cloneTask(state: IStore, test: ITest, level: ILevel, oldTask: ITask, newTask: ITask): IStore {
-    const clonedTasks = cloneArray(level.tasks, oldTask, newTask);
-    const clonedLevel: ILevel = { ...level, tasks: clonedTasks };
-
-    const clonedLevels = cloneArray(test.levels, level, clonedLevel);
-    const clonedTest: ITest = { ...test, levels: clonedLevels };
-
-    const clonedTests = cloneArray(state.tasks?.tests as ITest[], test, clonedTest);
-
-    return {
-        ...state,
-        tasks: {
-            ...state.tasks as ITasksCollection,
-            tests: clonedTests
-        }
-    };
-}
-
-function cloneArray<T>(array: T[], oldObject: T, newObject: T): T[] {
-    const pos = array.indexOf(oldObject);
-    const newArray = array.slice();
-
-    newArray[pos] = newObject;
-
-    return newArray;
-}
-
 const initialStore: IStore = {
+    exams: null,
+    tests: null,
+    levels: null,
     tasks: null,
+
     openedLevel: null,
     openedTask: null,
 };

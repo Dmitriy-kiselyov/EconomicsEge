@@ -7,20 +7,20 @@ import { Button } from './construct/Button';
 import { Title } from './construct/Title';
 import { TestInfo } from './TestInfo';
 import { getTasks } from '../lib/getTasks';
-import { ITasksCollection } from '../typings/tasks';
 import { setTasks } from '../store/setTasks';
-import { IStore } from '../typings/store';
+import { IStore, IStoreExam, IStoreTest } from '../typings/store';
 import { margins } from '../lib/constants';
 
 interface IConnectProps {
-    tasks: ITasksCollection | null;
+    exams: IStoreExam[] | null;
+    tests: IStoreTest[] | null;
 }
 
 type IAppProps = IConnectProps & DispatchProp;
 
 export class MainActivityPresenter extends React.PureComponent<IAppProps> {
     componentDidMount(): void {
-        if (this.props.tasks == null) {
+        if (this.props.exams == null) {
             getTasks().then(tasks => {
                 this.props.dispatch(setTasks(tasks));
 
@@ -30,26 +30,26 @@ export class MainActivityPresenter extends React.PureComponent<IAppProps> {
     }
 
     render() {
-        const { tasks } = this.props;
+        const { exams, tests } = this.props;
 
         return (
             <ScrollView>
                 <View style={styles.screen}>
                     {
-                        tasks ? this.renderTasks(tasks) : null
+                        exams && tests ? this.renderTasks(exams, tests) : null
                     }
                 </View>
             </ScrollView>
         );
     }
 
-    private renderTasks(tasks: ITasksCollection): React.ReactElement {
+    private renderTasks(exams: IStoreExam[], tests: IStoreTest[]): React.ReactElement {
         return (
             <>
                 <Title size="l" title="Экзамены" center />
                 <View style={[styles.topButtons, styles.margin]}>
                     {
-                        tasks.exams.map(exam => (
+                        exams.map(exam => (
                             <Button
                                 title={exam.title}
                                 key={exam.title}
@@ -60,12 +60,11 @@ export class MainActivityPresenter extends React.PureComponent<IAppProps> {
                 </View>
                 <Title size="l" title="Тесты" style={styles.margin} center />
                 {
-                    tasks.tests.map(test => (
+                    tests.map(test => (
                         <TestInfo
                             style={styles.margin}
-                            title={test.title}
                             key={test.title}
-                            levels={test.levels}
+                            test={test}
                         />
                     ))
                 }
@@ -90,6 +89,7 @@ const styles = StyleSheet.create({
 
 export const MainScreen = connect(
     (state: IStore): IConnectProps => ({
-        tasks: state.tasks,
+        exams: state.exams,
+        tests: state.tests
     })
 )(MainActivityPresenter);

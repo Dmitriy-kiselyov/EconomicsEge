@@ -7,14 +7,14 @@ import { BackListener } from './construct/BackListener';
 import { closeTask } from '../store/closeTask';
 import { margins } from '../lib/constants';
 import { ILevel, ITask } from '../typings/tasks';
-import { IStore } from '../typings/store';
-import { findLevel, IFindLevelResult } from '../lib/storeHelpers';
+import { IFulfilledStore, IStoreLevel } from '../typings/store';
 import { Title } from './construct/Title';
+import { getLevelFromStore } from '../lib/getLevelFromStore';
 
 interface IConnectProps {
     level: ILevel;
-    testName: string;
     initialIndex: number;
+    testTitle: string;
 }
 
 type ITasksScreenProps = IConnectProps & DispatchProp;
@@ -23,7 +23,7 @@ class TasksScreenPresenter extends BackListener<ITasksScreenProps> {
     render() {
         return (
             <View style={styles.screen}>
-                <Title size="l" title={this.props.testName} center />
+                <Title size="l" title={this.props.testTitle} center />
                 <Title size="m" title={this.props.level.title} center />
                 <ViewPager
                     style={styles.pager}
@@ -54,22 +54,17 @@ class TasksScreenPresenter extends BackListener<ITasksScreenProps> {
 }
 
 export const TasksScreen = connect(
-    (state: IStore): IConnectProps => {
-        const { test, level } = findLevel(state, state.openedLevel as string) as IFindLevelResult;
+    (state: IFulfilledStore): IConnectProps => {
         const openedTask = state.openedTask as string;
+        const openedLevel = state.openedLevel as string;
+        const level = state.levels[openedLevel];
+        const taskIndex = level.tasks.indexOf(openedTask);
 
-        for (let i = 0; i < level.tasks.length; i++) {
-            if (level.tasks[i].path === openedTask) {
-                return {
-                    level,
-                    testName: test.title,
-                    initialIndex: i,
-                };
-            }
-        }
-
-        // @ts-ignore невозможно
-        return null;
+        return {
+            level: getLevelFromStore(state, openedLevel) as ILevel,
+            initialIndex: taskIndex,
+            testTitle: level.testTitle,
+        };
     }
 )(TasksScreenPresenter);
 

@@ -1,19 +1,26 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { useDispatch } from 'react-redux';
+import { connect, DispatchProp, useDispatch } from 'react-redux';
 
 import { Title } from './construct/Title';
 import { Button } from './construct/Button';
-import { ILevel } from '../typings/tasks';
 import { IMultiLang, multiLang } from '../lib/multiLang';
 import { colors, margins } from '../lib/constants';
 import { openLevel } from '../store/openLevel';
+import { IStore, IStoreTest } from '../typings/store';
+import { ILevel } from '../typings/tasks';
+import { getLevelFromStore } from '../lib/getLevelFromStore';
 
-export interface ITestSnippetProps {
-    title: string;
-    levels: ILevel[];
+export interface ITestInfoProps {
+    test: IStoreTest;
     style?: object;
 }
+
+interface IConnectProps {
+    levels: ILevel[];
+}
+
+type ITestSnippetPropsWithConnect = ITestInfoProps & IConnectProps & DispatchProp;
 
 const multiLangTasksCount: IMultiLang = {
     none: 'задач',
@@ -22,7 +29,7 @@ const multiLangTasksCount: IMultiLang = {
     many: 'задач',
 };
 
-export const TestInfo: React.FC<ITestSnippetProps> = props => {
+export const TestInfoPresenter: React.FC<ITestSnippetPropsWithConnect> = props => {
     const dispatch = useDispatch();
 
     const levels = props.levels.map((level, i) => (
@@ -45,11 +52,17 @@ export const TestInfo: React.FC<ITestSnippetProps> = props => {
 
     return (
         <View style={props.style}>
-            <Title size="m" title={props.title} />
+            <Title size="m" title={props.test.title} />
             <View style={styles.levels}>{levels}</View>
         </View>
     );
 };
+
+export const TestInfo = connect(
+    (state: IStore, props: ITestInfoProps): IConnectProps => ({
+        levels: props.test.levels.map(levelId => getLevelFromStore(state, levelId)) as ILevel[],
+    })
+)(TestInfoPresenter);
 
 const styles = StyleSheet.create({
     levels: {

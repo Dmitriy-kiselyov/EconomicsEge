@@ -26,7 +26,6 @@ export interface IActionCloseLevel {
 export interface IActionSetTaskText {
     type: ACTION_TYPES.SET_TASK_TEXT;
     path: string;
-    levelId: string;
     text: string;
 }
 
