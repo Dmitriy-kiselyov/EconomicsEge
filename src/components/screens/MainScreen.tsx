@@ -3,13 +3,13 @@ import { View, StyleSheet, ScrollView } from 'react-native';
 import { connect, DispatchProp } from 'react-redux';
 import SplashScreen from 'react-native-splash-screen';
 
-import { Button } from './construct/Button';
-import { Title } from './construct/Title';
-import { TestInfo } from './TestInfo';
-import { getTasks } from '../lib/getTasks';
-import { setTasks } from '../store/setTasks';
-import { IStore, IStoreExam, IStoreTest } from '../typings/store';
-import { margins } from '../lib/constants';
+import { Button } from '../construct/Button';
+import { Title } from '../construct/Title';
+import { TestInfo } from '../TestInfo';
+import { getTasks } from '../../lib/getTasks';
+import { setTasks } from '../../store/setTasks';
+import { IStore, IStoreExam, IStoreTest } from '../../typings/store';
+import { margins } from '../../lib/constants';
 
 interface IConnectProps {
     exams: IStoreExam[] | null;

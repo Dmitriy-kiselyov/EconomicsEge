@@ -1,20 +1,29 @@
 import React, { useRef, useEffect } from 'react';
+import { connect, DispatchProp } from 'react-redux';
 import { Animated, Easing, StyleSheet, Text, View } from 'react-native';
 
-import { Touchable } from './Touchable';
-import { colors, margins } from '../../lib/constants';
+import { Touchable } from './construct/Touchable';
+import { colors, margins } from '../lib/constants';
+import { fetchTaskText } from '../lib/fetchTaskText';
+import { IFulfilledStore, IStoreTask } from '../typings/store';
+import { openTasks } from '../store/openTask';
 
 export interface ITaskCardProps {
-    title: string;
-    text: string | null;
-    style?: object;
-    onClick?: () => void;
+    taskId: string;
 }
+
+interface IConnectProps {
+    task: IStoreTask;
+}
+
+type ITaskCardPropsWithConnect = ITaskCardProps & IConnectProps & DispatchProp;
 
 const numberOfLines = 3;
 
-export const TaskCard: React.FC<ITaskCardProps> = props => {
-    const style: object[] = [styles.card];
+export const TaskCardPresenter: React.FC<ITaskCardPropsWithConnect> = props => {
+    const { task } = props;
+    const { title, text, path } = task;
+
     const placeholderOpacity = useRef(new Animated.Value(0));
 
     function animatePlaceholder() {
@@ -30,26 +39,26 @@ export const TaskCard: React.FC<ITaskCardProps> = props => {
 
     useEffect(() => {
         animatePlaceholder();
+
+        if (text === null) {
+            fetchTaskText(props.dispatch, path);
+        }
     }, []);
 
-    if (props.style) {
-        style.push(props.style);
-    }
-
     return (
-        <View style={style}>
-            <Touchable delay onClick={props.onClick}>
+        <View style={styles.card}>
+            <Touchable delay onClick={() => props.dispatch(openTasks(task))}>
                 <View style={styles.padding}>
                     <Text style={styles.title}>
-                        {props.title}
+                        {title}
                     </Text>
                     {
-                        props.text ?
+                        text ?
                             <Text
                                 style={styles.text}
                                 numberOfLines={numberOfLines}
                             >
-                                {props.text}
+                                {text}
                             </Text> :
                         <>
                             {
@@ -70,6 +79,12 @@ export const TaskCard: React.FC<ITaskCardProps> = props => {
         </View>
     )
 };
+
+export const TaskCard = connect(
+    (state: IFulfilledStore, props: ITaskCardProps): IConnectProps => ({
+        task: state.tasks[props.taskId]
+    })
+)(React.memo(TaskCardPresenter));
 
 const styles = StyleSheet.create({
     card: {

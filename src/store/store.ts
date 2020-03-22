@@ -1,6 +1,6 @@
 import { createStore } from 'redux';
 
-import { IStore, IStoreExam, IStoreLevels, IStoreTasks, IStoreTest } from '../typings/store';
+import { IStore } from '../typings/store';
 import {
     ACTION_TYPES, IActionOpenLevel, IActionOpenTask, IActions, IActionSetTasks, IActionSetTaskText
 } from '../typings/actions';
@@ -29,45 +29,11 @@ function reducer(state: IStore | undefined, action: IActions): IStore {
 }
 
 function reduceSetTasks(state: IStore, action: IActionSetTasks): IStore {
-    const { tasksCollection } = action;
-
-    const exams: IStoreExam[] = tasksCollection.exams.map(exam => ({
-        title: exam.title,
-        tasks: exam.tasks.map(task => task.path)
-    }));
-    const tests: IStoreTest[] = tasksCollection.tests.map(test => ({
-        title: test.title,
-        levels: test.levels.map(level => level.id)
-    }));
-    const levels: IStoreLevels = {};
-    const tasks: IStoreTasks = {};
-
-    for (const exam of tasksCollection.exams) {
-        for (const task of exam.tasks) {
-            tasks[task.path] = task;
-        }
-    }
-    for (const test of tasksCollection.tests) {
-        for (const level of test.levels) {
-            levels[level.id] = {
-                id: level.id,
-                title: level.title,
-                testTitle: test.title,
-                tasks: level.tasks.map(task => task.path)
-            };
-
-            for (const task of level.tasks) {
-                tasks[task.path] = task;
-            }
-        }
-    }
+    const { data } = action;
 
     return {
         ...state,
-        exams,
-        tests,
-        levels,
-        tasks
+        ...data
     };
 }
 

@@ -2,36 +2,29 @@ import React from 'react';
 import { StyleSheet, View, FlatList, ListRenderItemInfo } from 'react-native';
 import { connect, DispatchProp } from 'react-redux';
 
-import { closeLevel } from '../store/closeLevel';
-import { ILevel, ITask } from '../typings/tasks';
-import { IFulfilledStore } from '../typings/store';
-import { Title } from './construct/Title';
-import { margins } from '../lib/constants';
-import { TaskCard } from './construct/TaskCard';
-import { fetchTaskText } from '../lib/fetchTaskText';
-import { BackListener } from './construct/BackListener';
-import { openTasks } from '../store/openTask';
-import { getLevelFromStore } from '../lib/getLevelFromStore';
+import { closeLevel } from '../../store/closeLevel';
+import { IFulfilledStore, IStoreLevel } from '../../typings/store';
+import { Title } from '../construct/Title';
+import { margins } from '../../lib/constants';
+import { TaskCard } from '../TaskCard';
+import { BackListener } from '../construct/BackListener';
 
 interface IConnectProps {
-    level: ILevel;
-    testName: string;
+    level: IStoreLevel;
 }
 
 type ILevelScreenProps = IConnectProps & DispatchProp;
-
-interface IEmptyCell {
-    empty: true;
-}
 
 const columns = 2;
 
 export class LevelScreenPresenter extends BackListener<ILevelScreenProps> {
     render() {
+        const { level } = this.props;
+
         return (
             <View style={styles.screen}>
-                <Title size="l" title={this.props.testName} center />
-                <Title size="m" title={this.props.level.title} center />
+                <Title size="l" title={level.testTitle} center />
+                <Title size="m" title={level.title} center />
                 <FlatList
                     style={styles.list}
                     data={this.getFilledWithEmptyData()}
@@ -43,11 +36,12 @@ export class LevelScreenPresenter extends BackListener<ILevelScreenProps> {
         );
     }
 
-    private getFilledWithEmptyData(): Array<ITask | IEmptyCell> {
-        const length = this.props.level.tasks.length;
-        const rest = new Array(this.getDivisibleLength() - length).fill({ empty: true });
+    private getFilledWithEmptyData(): Array<string | false> {
+        const { level } = this.props;
+        const length = level.tasks.length;
+        const rest = new Array(this.getDivisibleLength() - length).fill(false);
 
-        return this.props.level.tasks.concat(rest);
+        return level.tasks.concat(rest);
     }
 
     private getDivisibleLength(): number {
@@ -60,7 +54,7 @@ export class LevelScreenPresenter extends BackListener<ILevelScreenProps> {
         return Math.ceil(length / columns) * columns;
     }
 
-    private renderCell = (item: ListRenderItemInfo<ITask | IEmptyCell>): React.ReactElement => {
+    private renderCell = (item: ListRenderItemInfo<string | false>): React.ReactElement => {
         let { item: task, index } = item;
         const style: object[] = [styles.cell];
 
@@ -74,7 +68,7 @@ export class LevelScreenPresenter extends BackListener<ILevelScreenProps> {
             style.push(styles.cellBottom);
         }
 
-        if ((task as IEmptyCell).empty) {
+        if (task === false) {
             style.push(styles.cellInvisible);
 
             return (
@@ -82,19 +76,12 @@ export class LevelScreenPresenter extends BackListener<ILevelScreenProps> {
             );
         }
 
-        task = task as ITask;
-
-        if (!task.text) {
-            fetchTaskText(this.props.dispatch, this.props.level.id, task.path);
-        }
-
         return (
-            <TaskCard
-                title={task.title}
-                text={task.text}
-                style={style}
-                onClick={() => this.props.dispatch(openTasks(task as ITask))}
-            />
+            <View style={style}>
+                <TaskCard
+                    taskId={task}
+                />
+            </View>
         )
     };
 
@@ -134,12 +121,7 @@ const styles = StyleSheet.create({
 });
 
 export const LevelScreen = connect(
-    (state: IFulfilledStore): IConnectProps => {
-        const level = getLevelFromStore(state, state.openedLevel as string) as ILevel;
-
-        return {
-            level,
-            testName: state.levels[state.openedLevel as string].testTitle
-        };
-    }
+    (state: IFulfilledStore): IConnectProps => ({
+        level: state.levels[state.openedLevel as string]
+    })
 )(LevelScreenPresenter);

@@ -7,9 +7,7 @@ import { Button } from './construct/Button';
 import { IMultiLang, multiLang } from '../lib/multiLang';
 import { colors, margins } from '../lib/constants';
 import { openLevel } from '../store/openLevel';
-import { IStore, IStoreTest } from '../typings/store';
-import { ILevel } from '../typings/tasks';
-import { getLevelFromStore } from '../lib/getLevelFromStore';
+import { IFulfilledStore, IStoreLevel, IStoreTest } from '../typings/store';
 
 export interface ITestInfoProps {
     test: IStoreTest;
@@ -17,7 +15,7 @@ export interface ITestInfoProps {
 }
 
 interface IConnectProps {
-    levels: ILevel[];
+    levels: IStoreLevel[];
 }
 
 type ITestSnippetPropsWithConnect = ITestInfoProps & IConnectProps & DispatchProp;
@@ -59,8 +57,8 @@ export const TestInfoPresenter: React.FC<ITestSnippetPropsWithConnect> = props =
 };
 
 export const TestInfo = connect(
-    (state: IStore, props: ITestInfoProps): IConnectProps => ({
-        levels: props.test.levels.map(levelId => getLevelFromStore(state, levelId)) as ILevel[],
+    (state: IFulfilledStore, props: ITestInfoProps): IConnectProps => ({
+        levels: props.test.levels.map(levelId => state.levels[levelId])
     })
 )(TestInfoPresenter);
 

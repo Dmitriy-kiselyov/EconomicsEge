@@ -1,5 +1,3 @@
-import { ITask } from './tasks';
-
 interface ICommonStore {
     openedLevel: string | null;
     openedTask: string | null;
@@ -12,12 +10,14 @@ export interface IEmptyStore extends ICommonStore {
     tasks: null;
 }
 
-export interface IFulfilledStore extends ICommonStore {
+export interface IStoreFulfillData {
     exams: IStoreExam[];
     tests: IStoreTest[];
     levels: IStoreLevels;
     tasks: IStoreTasks;
 }
+
+export type IFulfilledStore = ICommonStore & IStoreFulfillData;
 
 export type IStore = IEmptyStore | IFulfilledStore;
 
@@ -39,4 +39,9 @@ export interface IStoreLevel {
     tasks: string[];
 }
 
-export type IStoreTasks = Record<string, ITask>;
+export type IStoreTasks = Record<string, IStoreTask>;
+export interface IStoreTask {
+    title: string;
+    path: string;
+    text: string | null;
+}

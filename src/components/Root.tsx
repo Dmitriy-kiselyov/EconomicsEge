@@ -1,10 +1,10 @@
 import React from 'react';
 import { connect, DispatchProp } from 'react-redux';
 
-import { MainScreen } from './MainScreen';
-import { LevelScreen } from './LevelScreen';
+import { MainScreen } from './screens/MainScreen';
+import { LevelScreen } from './screens/LevelScreen';
 import { IStore } from '../typings/store';
-import { TasksScreen } from './TasksScreen';
+import { TasksScreen } from './screens/TasksScreen';
 
 interface IConnectProps {
     openedLevel: string | null;

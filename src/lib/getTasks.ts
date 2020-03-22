@@ -1,49 +1,54 @@
 import fs from 'react-native-fs';
 
-import { ITask, ITasksCollection } from '../typings/tasks';
+import { IStoreExam, IStoreLevels, IStoreTasks, IStoreTest, IStoreTask, IStoreFulfillData } from '../typings/store';
 
 interface IDirOutput {
     path: string;
     name: string;
 }
 
-export async function getTasks(): Promise<ITasksCollection> {
-    const tasksCollection: ITasksCollection = {
-        exams: [
-            {
-                title: 'ОГЭ',
-                tasks: [],
-            },
-            {
-                title: 'ЕГЭ',
-                tasks: [],
+export async function getTasks(): Promise<IStoreFulfillData> {
+    const exams: IStoreExam[] = [
+        {
+            title: 'ОГЭ',
+            tasks: [],
+        },
+        {
+            title: 'ЕГЭ',
+            tasks: [],
+        }
+    ];
+    const tests: IStoreTest[] = [];
+    const levels: IStoreLevels = {};
+    const tasks: IStoreTasks = {};
+
+    const testsOutput = await getDirOutput('tasks/tests');
+
+    for (const test of testsOutput) {
+        const levelsOutput = await getDirOutput(test.path);
+
+        for (const level of levelsOutput) {
+            const tasksOutput = await getFileOutput(level.path);
+
+            for (const task of tasksOutput) {
+                tasks[task.path] = task;
             }
-        ],
-        tests: [],
-    };
-    const tests = await getDirOutput('tasks/tests');
 
-    for (const test of tests) {
-        const levels = await getDirOutput(test.path);
-        const tasksLevels = [];
-
-        for (const level of levels) {
-            const tasks = await getFileOutput(level.path);
-
-            tasksLevels.push({
-                title: level.name,
-                tasks,
+            levels[level.path] = {
                 id: level.path,
-            });
+                title: level.name,
+                testTitle: test.name,
+                tasks: tasksOutput.map(task => task.path)
+            }
         }
 
-        tasksCollection.tests.push({
+        tests.push({
             title: test.name,
-            levels: tasksLevels,
+            levels: levelsOutput.map(level => level.path)
         });
     }
 
-    return tasksCollection;
+    return { exams, tests, levels, tasks };
 }
 
 export async function getDirOutput(path: string): Promise<IDirOutput[]> {
@@ -57,7 +62,7 @@ export async function getDirOutput(path: string): Promise<IDirOutput[]> {
         }));
 }
 
-export async function getFileOutput(path: string): Promise<ITask[]> {
+export async function getFileOutput(path: string): Promise<IStoreTask[]> {
     const files = await fs.readDirAssets(path);
 
     return files

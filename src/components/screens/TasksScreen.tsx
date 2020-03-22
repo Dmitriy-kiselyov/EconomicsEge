@@ -3,41 +3,42 @@ import ViewPager from '@react-native-community/viewpager';
 import { Text, StyleSheet, View, ScrollView } from 'react-native';
 import { connect, DispatchProp } from 'react-redux';
 
-import { BackListener } from './construct/BackListener';
-import { closeTask } from '../store/closeTask';
-import { margins } from '../lib/constants';
-import { ILevel, ITask } from '../typings/tasks';
-import { IFulfilledStore, IStoreLevel } from '../typings/store';
-import { Title } from './construct/Title';
-import { getLevelFromStore } from '../lib/getLevelFromStore';
+import { BackListener } from '../construct/BackListener';
+import { closeTask } from '../../store/closeTask';
+import { margins } from '../../lib/constants';
+import { IFulfilledStore, IStoreTask } from '../../typings/store';
+import { Title } from '../construct/Title';
 
 interface IConnectProps {
-    level: ILevel;
-    initialIndex: number;
+    levelTitle: string;
     testTitle: string;
+    initialIndex: number;
+    tasks: IStoreTask[];
 }
 
 type ITasksScreenProps = IConnectProps & DispatchProp;
 
 class TasksScreenPresenter extends BackListener<ITasksScreenProps> {
     render() {
+        const { testTitle, levelTitle, tasks } = this.props;
+
         return (
             <View style={styles.screen}>
-                <Title size="l" title={this.props.testTitle} center />
-                <Title size="m" title={this.props.level.title} center />
+                <Title size="l" title={testTitle} center />
+                <Title size="m" title={levelTitle} center />
                 <ViewPager
                     style={styles.pager}
                     initialPage={this.props.initialIndex}
                 >
                     {
-                        this.props.level.tasks.map(task => this.renderTask(task))
+                        tasks.map(task => this.renderTask(task))
                     }
                 </ViewPager>
             </View>
         );
     }
 
-    private renderTask(task: ITask): React.ReactElement {
+    private renderTask(task: IStoreTask): React.ReactElement {
         return (
             <ScrollView key={task.path} style={styles.task}>
                 <Title size="m" title={task.title}/>
@@ -61,9 +62,10 @@ export const TasksScreen = connect(
         const taskIndex = level.tasks.indexOf(openedTask);
 
         return {
-            level: getLevelFromStore(state, openedLevel) as ILevel,
             initialIndex: taskIndex,
             testTitle: level.testTitle,
+            levelTitle: level.title,
+            tasks: level.tasks.map(taskId => state.tasks[taskId])
         };
     }
 )(TasksScreenPresenter);

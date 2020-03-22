@@ -1,9 +1,9 @@
 import { ACTION_TYPES, IActionSetTasks } from '../typings/actions';
-import { ITasksCollection } from '../typings/tasks';
+import { IStoreFulfillData } from '../typings/store';
 
-export function setTasks(tasksCollection: ITasksCollection): IActionSetTasks {
+export function setTasks(data: IStoreFulfillData): IActionSetTasks {
     return {
         type: ACTION_TYPES.SET_TASKS,
-        tasksCollection,
+        data,
     }
 }

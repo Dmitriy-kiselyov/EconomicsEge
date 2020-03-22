@@ -1,4 +1,4 @@
-import { ITask, ITasksCollection } from './tasks';
+import { IStoreFulfillData, IStoreTask } from './store';
 
 export enum ACTION_TYPES {
     SET_TASKS = 'SET_TASKS',
@@ -11,7 +11,7 @@ export enum ACTION_TYPES {
 
 export interface IActionSetTasks {
     type: ACTION_TYPES.SET_TASKS;
-    tasksCollection: ITasksCollection;
+    data: IStoreFulfillData;
 }
 
 export interface IActionOpenLevel {
@@ -31,7 +31,7 @@ export interface IActionSetTaskText {
 
 export interface IActionOpenTask {
     type: ACTION_TYPES.OPEN_TASK;
-    task: ITask;
+    task: IStoreTask;
 }
 
 export interface IActionCloseTask {

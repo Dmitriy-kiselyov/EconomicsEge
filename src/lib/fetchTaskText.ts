@@ -5,7 +5,7 @@ import { setTaskText } from '../store/setTaskText';
 
 const pathMemo = new Set<string>();
 
-export async function fetchTaskText(dispatch: Dispatch, levelId: string, path: string) {
+export async function fetchTaskText(dispatch: Dispatch, path: string) {
     if (pathMemo.has(path)) {
         return;
     }
@@ -13,5 +13,5 @@ export async function fetchTaskText(dispatch: Dispatch, levelId: string, path: s
 
     const text = await fs.readFileAssets(path);
 
-    dispatch(setTaskText(levelId, path, text));
+    dispatch(setTaskText(path, text));
 }
