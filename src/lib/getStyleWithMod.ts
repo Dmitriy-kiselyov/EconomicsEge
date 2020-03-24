@@ -1,6 +1,6 @@
 export type IMods = Record<string, string | boolean | undefined>;
 
-export function getStyleWithMod(style: object, styleName: string, mods: IMods) {
+export function getStyleWithMod(style: object, styleName: string, mods: IMods): object[] {
     const styleMods = [styleName];
 
     Object.keys(mods).forEach(key => {

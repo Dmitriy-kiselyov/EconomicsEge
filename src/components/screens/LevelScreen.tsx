@@ -1,7 +1,8 @@
 import React from 'react';
-import { StyleSheet, View, FlatList, ListRenderItemInfo } from 'react-native';
+import { StyleSheet, View, ListRenderItemInfo, Dimensions } from 'react-native';
 import { connect, DispatchProp } from 'react-redux';
 
+import { FlatListFixed } from '../construct/FlatListFixed';
 import { closeLevel } from '../../store/closeLevel';
 import { IFulfilledStore, IStoreLevel } from '../../typings/store';
 import { Title } from '../construct/Title';
@@ -15,8 +16,6 @@ interface IConnectProps {
 
 type ILevelScreenProps = IConnectProps & DispatchProp;
 
-const columns = 2;
-
 export class LevelScreenPresenter extends BackListener<ILevelScreenProps> {
     render() {
         const { level } = this.props;
@@ -25,63 +24,21 @@ export class LevelScreenPresenter extends BackListener<ILevelScreenProps> {
             <View style={styles.screen}>
                 <Title size="l" title={level.testTitle} center />
                 <Title size="m" title={level.title} center />
-                <FlatList
+                <FlatListFixed
                     style={styles.list}
-                    data={this.getFilledWithEmptyData()}
-                    renderItem={this.renderCell}
-                    numColumns={columns}
-                    keyExtractor={(item: unknown, index: number) => String(index)}
+                    data={this.props.level.tasks}
+                    renderItem={this.renderItem}
+                    cellMinWidth={200}
                 />
             </View>
         );
     }
 
-    private getFilledWithEmptyData(): Array<string | false> {
-        const { level } = this.props;
-        const length = level.tasks.length;
-        const rest = new Array(this.getDivisibleLength() - length).fill(false);
-
-        return level.tasks.concat(rest);
-    }
-
-    private getDivisibleLength(): number {
-        const length = this.props.level.tasks.length;
-
-        if (length % columns === 0) {
-            return length;
-        }
-
-        return Math.ceil(length / columns) * columns;
-    }
-
-    private renderCell = (item: ListRenderItemInfo<string | false>): React.ReactElement => {
-        let { item: task, index } = item;
-        const style: object[] = [styles.cell];
-
-        if (index % columns === 0) {
-            style.push(styles.cellLeft);
-        }
-        if ((index + 1) % columns === 0) {
-            style.push(styles.cellRight);
-        }
-        if (index === this.props.level.tasks.length - 1) {
-            style.push(styles.cellBottom);
-        }
-
-        if (task === false) {
-            style.push(styles.cellInvisible);
-
-            return (
-                <View style={style}/>
-            );
-        }
-
+    private renderItem = (item: string): React.ReactElement => {
         return (
-            <View style={style}>
-                <TaskCard
-                    taskId={task}
-                />
-            </View>
+            <TaskCard
+                taskId={item}
+            />
         )
     };
 
@@ -101,22 +58,6 @@ const styles = StyleSheet.create({
         marginHorizontal: -margins.l,
         marginBottom: -margins.l,
         marginTop: margins.l,
-    },
-    cellLeft: {
-        marginLeft: margins.l
-    },
-    cellRight: {
-        marginRight: margins.l
-    },
-    cellBottom: {
-        marginBottom: margins.l,
-    },
-    cell: {
-        margin: margins.s,
-        flex: 1,
-    },
-    cellInvisible: {
-        backgroundColor: 'transparent',
     }
 });
 
