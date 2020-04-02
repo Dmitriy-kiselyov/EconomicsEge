@@ -1,14 +1,14 @@
 import React from 'react';
-import { StyleSheet, View, ListRenderItemInfo, Dimensions } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { connect, DispatchProp } from 'react-redux';
 
 import { FlatListFixed } from '../construct/FlatListFixed';
 import { closeLevel } from '../../store/closeLevel';
 import { IFulfilledStore, IStoreLevel } from '../../typings/store';
-import { Title } from '../construct/Title';
 import { margins } from '../../lib/constants';
 import { TaskCard } from '../TaskCard';
 import { BackListener } from '../construct/BackListener';
+import { ScreenTitle } from '../construct/ScreenTitle';
 
 interface IConnectProps {
     level: IStoreLevel;
@@ -22,8 +22,10 @@ export class LevelScreenPresenter extends BackListener<ILevelScreenProps> {
 
         return (
             <View style={styles.screen}>
-                <Title size="l" title={level.testTitle} center />
-                <Title size="m" title={level.title} center />
+                <ScreenTitle
+                    title={level.testTitle}
+                    subtitle={level.title}
+                />
                 <FlatListFixed
                     style={styles.list}
                     data={this.props.level.tasks}

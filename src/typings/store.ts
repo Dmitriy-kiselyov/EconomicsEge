@@ -1,6 +1,8 @@
 interface ICommonStore {
+    openedTest: string | null;
     openedLevel: string | null;
     openedTask: string | null;
+    openedTheory: string | null;
 }
 
 export interface IEmptyStore extends ICommonStore {
@@ -29,6 +31,7 @@ export interface IStoreExam {
 export interface IStoreTest {
     title: string;
     levels: string[];
+    theory?: string;
 }
 
 export type IStoreLevels = Record<string, IStoreLevel>;

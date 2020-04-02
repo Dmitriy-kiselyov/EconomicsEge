@@ -1,8 +1,8 @@
 import { createStore } from 'redux';
 
-import { IStore } from '../typings/store';
+import { IFulfilledStore, IStore } from '../typings/store';
 import {
-    ACTION_TYPES, IActionOpenLevel, IActionOpenTask, IActions, IActionSetTasks, IActionSetTaskText
+    ACTION_TYPES, IActionOpenLevel, IActionOpenTask, IActionOpenTheory, IActions, IActionSetTasks, IActionSetTaskText
 } from '../typings/actions';
 
 function reducer(state: IStore | undefined, action: IActions): IStore {
@@ -14,7 +14,7 @@ function reducer(state: IStore | undefined, action: IActions): IStore {
         case ACTION_TYPES.SET_TASKS:
             return reduceSetTasks(state, action);
         case ACTION_TYPES.OPEN_LEVEL:
-            return reduceOpenLevel(state, action);
+            return reduceOpenLevel(state as IFulfilledStore, action);
         case ACTION_TYPES.CLOSE_LEVEL:
             return reduceCloseLevel(state);
         case ACTION_TYPES.SET_TASK_TEXT:
@@ -23,6 +23,10 @@ function reducer(state: IStore | undefined, action: IActions): IStore {
             return reduceOpenTask(state, action);
         case ACTION_TYPES.CLOSE_TASK:
             return reduceCloseTask(state);
+        case ACTION_TYPES.OPEN_THEORY:
+            return reduceOpenTheory(state, action);
+        case ACTION_TYPES.CLOSE_THEORY:
+            return reduceCloseTheory(state);
         default:
             return state;
     }
@@ -37,17 +41,19 @@ function reduceSetTasks(state: IStore, action: IActionSetTasks): IStore {
     };
 }
 
-function reduceOpenLevel(state: IStore, action: IActionOpenLevel): IStore {
+function reduceOpenLevel(state: IFulfilledStore, action: IActionOpenLevel): IStore {
     return {
         ...state,
-        openedLevel: action.openedLevel
+        openedLevel: action.openedLevel,
+        openedTest: state.levels[action.openedLevel].testTitle,
     }
 }
 
 function reduceCloseLevel(state: IStore): IStore {
     return {
         ...state,
-        openedLevel: null
+        openedLevel: null,
+        openedTest: null,
     }
 }
 
@@ -82,14 +88,32 @@ function reduceCloseTask(state: IStore): IStore {
     }
 }
 
+function reduceOpenTheory(state: IStore, action: IActionOpenTheory): IStore {
+    return {
+        ...state,
+        openedTheory: action.theoryPath,
+        openedTest: action.testTitle,
+    }
+}
+
+function reduceCloseTheory(state: IStore): IStore {
+    return {
+        ...state,
+        openedTheory: null,
+        openedTest: null,
+    }
+}
+
 const initialStore: IStore = {
     exams: null,
     tests: null,
     levels: null,
     tasks: null,
 
+    openedTest: null,
     openedLevel: null,
     openedTask: null,
+    openedTheory: null,
 };
 
 export const store = createStore(

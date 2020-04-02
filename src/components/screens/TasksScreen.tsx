@@ -8,6 +8,7 @@ import { closeTask } from '../../store/closeTask';
 import { margins } from '../../lib/constants';
 import { IFulfilledStore, IStoreTask } from '../../typings/store';
 import { Title } from '../construct/Title';
+import { ScreenTitle } from '../construct/ScreenTitle';
 
 interface IConnectProps {
     levelTitle: string;
@@ -24,8 +25,10 @@ class TasksScreenPresenter extends BackListener<ITasksScreenProps> {
 
         return (
             <View style={styles.screen}>
-                <Title size="l" title={testTitle} center />
-                <Title size="m" title={levelTitle} center />
+                <ScreenTitle
+                    title={testTitle}
+                    subtitle={levelTitle}
+                />
                 <ViewPager
                     style={styles.pager}
                     initialPage={this.props.initialIndex}

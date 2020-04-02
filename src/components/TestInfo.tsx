@@ -8,6 +8,7 @@ import { IMultiLang, multiLang } from '../lib/multiLang';
 import { colors, margins } from '../lib/constants';
 import { openLevel } from '../store/openLevel';
 import { IFulfilledStore, IStoreLevel, IStoreTest } from '../typings/store';
+import { openTheory } from '../store/openTheory';
 
 export interface ITestInfoProps {
     test: IStoreTest;
@@ -29,9 +30,11 @@ const multiLangTasksCount: IMultiLang = {
 
 export const TestInfoPresenter: React.FC<ITestSnippetPropsWithConnect> = props => {
     const dispatch = useDispatch();
+    const { levels, test } = props;
+    const { theory } = test;
 
-    const levels = props.levels.map(level => (
-        <View key={level.title} style={styles.marginLeft}>
+    const Levels = levels.map((level, i) => (
+        <View key={level.title} style={i < levels.length - 1 ? styles.marginRight : null}>
             <Button
                 title={level.title}
                 size="m"
@@ -48,17 +51,28 @@ export const TestInfoPresenter: React.FC<ITestSnippetPropsWithConnect> = props =
         </View>
     ));
 
+    const TheoryButton = theory ? (
+        <Button
+            style={styles.marginRight}
+            title="Теория"
+            size="m"
+            outline
+            delay
+            onClick={() => dispatch(openTheory(theory, test.title))}
+        />
+    ) : null;
+
     return (
         <View style={props.style}>
-            <Title size="m" title={props.test.title} />
+            <Title size="m" title={test.title} />
             <ScrollView
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 style={styles.scroll}
             >
                 <View style={styles.scrollContent}>
-                    <Button title="Теория" size="m" outline delay/>
-                    {levels}
+                    {TheoryButton}
+                    {Levels}
                 </View>
             </ScrollView>
         </View>
@@ -86,7 +100,7 @@ const styles = StyleSheet.create({
         color: colors.grey,
         marginTop: margins.s,
     },
-    marginLeft: {
-        marginLeft: margins.m,
+    marginRight: {
+        marginRight: margins.m,
     },
 });

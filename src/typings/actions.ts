@@ -6,7 +6,9 @@ export enum ACTION_TYPES {
     CLOSE_LEVEL = 'CLOSE_LEVEL',
     SET_TASK_TEXT = 'SET_TASK_TEXT',
     OPEN_TASK = 'OPEN_TASK',
-    CLOSE_TASK = 'CLOSE_TASK'
+    CLOSE_TASK = 'CLOSE_TASK',
+    OPEN_THEORY = 'OPEN_THEORY',
+    CLOSE_THEORY = 'CLOSE_THEORY'
 }
 
 export interface IActionSetTasks {
@@ -38,4 +40,15 @@ export interface IActionCloseTask {
     type: ACTION_TYPES.CLOSE_TASK;
 }
 
-export type IActions = IActionSetTasks | IActionOpenLevel | IActionCloseLevel | IActionSetTaskText | IActionOpenTask | IActionCloseTask;
+export interface IActionOpenTheory {
+    type: ACTION_TYPES.OPEN_THEORY;
+    theoryPath: string;
+    testTitle: string;
+}
+
+export interface IActionCloseTheory {
+    type: ACTION_TYPES.CLOSE_THEORY;
+}
+
+export type IActions = IActionSetTasks | IActionOpenLevel | IActionCloseLevel | IActionSetTaskText | IActionOpenTask |
+    IActionCloseTask | IActionOpenTheory | IActionCloseTheory;
