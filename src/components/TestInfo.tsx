@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { connect, DispatchProp, useDispatch } from 'react-redux';
 
 import { Title } from './construct/Title';
@@ -30,8 +30,8 @@ const multiLangTasksCount: IMultiLang = {
 export const TestInfoPresenter: React.FC<ITestSnippetPropsWithConnect> = props => {
     const dispatch = useDispatch();
 
-    const levels = props.levels.map((level, i) => (
-        <View key={level.title} style={i !== 0 ? styles.marginLeft : undefined}>
+    const levels = props.levels.map(level => (
+        <View key={level.title} style={styles.marginLeft}>
             <Button
                 title={level.title}
                 size="m"
@@ -51,7 +51,16 @@ export const TestInfoPresenter: React.FC<ITestSnippetPropsWithConnect> = props =
     return (
         <View style={props.style}>
             <Title size="m" title={props.test.title} />
-            <View style={styles.levels}>{levels}</View>
+            <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                style={styles.scroll}
+            >
+                <View style={styles.scrollContent}>
+                    <Button title="Теория" size="m" outline delay/>
+                    {levels}
+                </View>
+            </ScrollView>
         </View>
     );
 };
@@ -63,10 +72,14 @@ export const TestInfo = connect(
 )(TestInfoPresenter);
 
 const styles = StyleSheet.create({
-    levels: {
+    scroll: {
+        marginHorizontal: -margins.l,
+        marginTop: margins.m
+    },
+    scrollContent: {
         flexDirection: 'row',
         justifyContent: 'flex-start',
-        marginTop: margins.m,
+        paddingHorizontal: margins.l,
     },
     info: {
         textAlign: 'center',
