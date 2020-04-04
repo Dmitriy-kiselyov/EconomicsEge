@@ -8,6 +8,7 @@ import { closeTheory } from '../../store/closeTheory';
 import { colors, margins } from '../../lib/constants';
 import { ScreenTitle } from '../construct/ScreenTitle';
 import { IStore } from '../../typings/store';
+import { Loading } from '../construct/Loading';
 
 interface IConnectProps {
     theoryPath: string;
@@ -33,6 +34,7 @@ class TheoryScreenPresenter extends BackListener<ITheoryScreenPropsWithConnect> 
                         spacing={2}
                         fitPolicy={0}
                         maxScale={1}
+                        activityIndicator={<Loading/>}
                     />
                 </View>
             </View>
