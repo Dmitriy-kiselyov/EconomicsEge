@@ -92,8 +92,7 @@ const styles = StyleSheet.create({
         borderColor: colors.primary,
         borderWidth: 3,
         borderRadius: 10,
-        elevation: 5,
-        height: 110
+        elevation: 5
     },
     padding: {
         paddingHorizontal: margins.m,
@@ -107,10 +106,12 @@ const styles = StyleSheet.create({
     text: {
         color: colors.grey,
         fontSize: 15,
+        lineHeight: 19,
+        minHeight: 19 * numberOfLines, // textPlaceholder Height
     },
     textPlaceholder: {
         backgroundColor: colors.lightGrey,
-        height: 17,
+        height: 15,
         borderRadius: 100,
         marginVertical: 2,
     }

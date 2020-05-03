@@ -30,7 +30,7 @@ export class LevelScreenPresenter extends BackListener<ILevelScreenProps> {
                     style={styles.list}
                     data={this.props.level.tasks}
                     renderItem={this.renderItem}
-                    cellMinWidth={200}
+                    cellMinWidth={180}
                 />
             </View>
         );
