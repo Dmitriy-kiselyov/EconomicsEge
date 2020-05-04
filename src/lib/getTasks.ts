@@ -28,7 +28,7 @@ export async function getTasks(): Promise<IStoreFulfillData> {
         const levelsOutput = await getDirOutput(test.path);
 
         for (const level of levelsOutput) {
-            const tasksOutput = await getFileOutput(level.path);
+            const tasksOutput = await getFileOutput(level.path, 'txt');
 
             for (const task of tasksOutput) {
                 tasks[task.path] = task;
@@ -38,14 +38,14 @@ export async function getTasks(): Promise<IStoreFulfillData> {
                 id: level.path,
                 title: level.name,
                 testTitle: test.name,
-                tasks: tasksOutput.map(task => task.path)
+                tasks: tasksOutput.map(task => task.path),
+                theory: await getTheoryPath(level.path)
             }
         }
 
         tests.push({
             title: test.name,
-            levels: levelsOutput.map(level => level.path),
-            theory: await getTheoryPath(test.path)
+            levels: levelsOutput.map(level => level.path)
         });
     }
 
@@ -63,11 +63,11 @@ export async function getDirOutput(path: string): Promise<IDirOutput[]> {
         }));
 }
 
-export async function getFileOutput(path: string): Promise<IStoreTask[]> {
+export async function getFileOutput(path: string, extension: string): Promise<IStoreTask[]> {
     const files = await fs.readDirAssets(path);
 
     return files
-        .filter(file => file.isFile())
+        .filter(file => file.isFile() && file.name.endsWith('.' + extension))
         .map(file => ({
             title: getFileName(file.name),
             path: file.path,
@@ -76,8 +76,8 @@ export async function getFileOutput(path: string): Promise<IStoreTask[]> {
         .sort((a, b) => +a.title - +b.title);
 }
 
-export async function getTheoryPath(testPath: string): Promise<string | undefined> {
-    const theoryPath = testPath + '/теория.pdf';
+export async function getTheoryPath(levelPath: string): Promise<string | undefined> {
+    const theoryPath = levelPath + '/теория.pdf';
     const hasTheory = await fs.existsAssets(theoryPath);
 
     return hasTheory ? theoryPath : undefined;

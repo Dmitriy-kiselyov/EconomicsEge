@@ -23,6 +23,7 @@ const delayedClickHandler = (onClick?: () => void) => {
 
 export const Touchable: React.FC<ITouchable> = props => {
     return (
+        // @ts-ignore
         <TouchableNative
             accessibilityRole="button"
             onPress={props.delay ? delayedClickHandler(props.onClick) : props.onClick}

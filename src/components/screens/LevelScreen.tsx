@@ -9,6 +9,7 @@ import { margins } from '../../lib/constants';
 import { TaskCard } from '../TaskCard';
 import { BackListener } from '../construct/BackListener';
 import { ScreenTitle } from '../construct/ScreenTitle';
+import { openTheory } from '../../store/openTheory';
 
 interface IConnectProps {
     level: IStoreLevel;
@@ -19,12 +20,16 @@ type ILevelScreenProps = IConnectProps & DispatchProp;
 export class LevelScreenPresenter extends BackListener<ILevelScreenProps> {
     render() {
         const { level } = this.props;
+        const { theory } = level;
 
         return (
             <View style={styles.screen}>
                 <ScreenTitle
                     title={level.testTitle}
                     subtitle={level.title}
+
+                    left={theory ? 'Теория' : undefined}
+                    onLeftClick={this.handleOpenTheory}
                 />
                 <FlatListFixed
                     style={styles.list}
@@ -34,6 +39,10 @@ export class LevelScreenPresenter extends BackListener<ILevelScreenProps> {
                 />
             </View>
         );
+    }
+
+    private handleOpenTheory = () => {
+        this.props.dispatch(openTheory(this.props.level.theory as string, this.props.level.id));
     }
 
     private renderItem = (item: string): React.ReactElement => {

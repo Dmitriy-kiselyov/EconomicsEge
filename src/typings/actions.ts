@@ -43,11 +43,12 @@ export interface IActionCloseTask {
 export interface IActionOpenTheory {
     type: ACTION_TYPES.OPEN_THEORY;
     theoryPath: string;
-    testTitle: string;
+    levelId: string;
 }
 
 export interface IActionCloseTheory {
     type: ACTION_TYPES.CLOSE_THEORY;
+    closeLevel?: boolean;
 }
 
 export type IActions = IActionSetTasks | IActionOpenLevel | IActionCloseLevel | IActionSetTaskText | IActionOpenTask |

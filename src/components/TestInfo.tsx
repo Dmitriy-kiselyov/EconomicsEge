@@ -31,36 +31,40 @@ const multiLangTasksCount: IMultiLang = {
 export const TestInfoPresenter: React.FC<ITestSnippetPropsWithConnect> = props => {
     const dispatch = useDispatch();
     const { levels, test } = props;
-    const { theory } = test;
 
-    const Levels = levels.map((level, i) => (
-        <View key={level.title} style={i < levels.length - 1 ? styles.marginRight : null}>
+    const Levels = levels.map((level, i) => {
+        const { theory } = level;
+
+        const TheoryButton = theory ? (
             <Button
-                title={level.title}
+                style={styles.marginBottom}
+                title="Теория"
                 size="m"
-                key={level.title}
                 outline
                 delay
-                onClick={() => dispatch(openLevel(level.id))}
+                onClick={() => dispatch(openTheory(theory, level.id))}
             />
-            <Text style={styles.info}>
-                {
-                    level.tasks.length + ' ' + multiLang(level.tasks.length, multiLangTasksCount)
-                }
-            </Text>
-        </View>
-    ));
+        ) : null;
 
-    const TheoryButton = theory ? (
-        <Button
-            style={styles.marginRight}
-            title="Теория"
-            size="m"
-            outline
-            delay
-            onClick={() => dispatch(openTheory(theory, test.title))}
-        />
-    ) : null;
+        return (
+            <View key={level.title} style={i < levels.length - 1 ? styles.marginRight : null}>
+                {TheoryButton}
+                <Button
+                    title={level.title}
+                    size="m"
+                    key={level.title}
+                    outline
+                    delay
+                    onClick={() => dispatch(openLevel(level.id))}
+                />
+                <Text style={styles.info}>
+                    {
+                        level.tasks.length + ' ' + multiLang(level.tasks.length, multiLangTasksCount)
+                    }
+                </Text>
+            </View>
+        )
+    });
 
     return (
         <View style={props.style}>
@@ -71,7 +75,6 @@ export const TestInfoPresenter: React.FC<ITestSnippetPropsWithConnect> = props =
                 style={styles.scroll}
             >
                 <View style={styles.scrollContent}>
-                    {TheoryButton}
                     {Levels}
                 </View>
             </ScrollView>
@@ -92,7 +95,7 @@ const styles = StyleSheet.create({
     },
     scrollContent: {
         flexDirection: 'row',
-        justifyContent: 'flex-start',
+        alignItems: 'flex-end',
         paddingHorizontal: margins.l,
     },
     info: {
@@ -103,4 +106,7 @@ const styles = StyleSheet.create({
     marginRight: {
         marginRight: margins.m,
     },
+    marginBottom: {
+        marginBottom: margins.m,
+    }
 });

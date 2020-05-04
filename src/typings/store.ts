@@ -31,7 +31,6 @@ export interface IStoreExam {
 export interface IStoreTest {
     title: string;
     levels: string[];
-    theory?: string;
 }
 
 export type IStoreLevels = Record<string, IStoreLevel>;
@@ -40,6 +39,7 @@ export interface IStoreLevel {
     title: string;
     testTitle: string;
     tasks: string[];
+    theory?: string;
 }
 
 export type IStoreTasks = Record<string, IStoreTask>;
