@@ -1,9 +1,9 @@
 import React, { useRef, useEffect } from 'react';
-import { StyleSheet, View, Animated, Easing } from 'react-native';
+import { StyleSheet, View, Animated, Easing, AppState } from 'react-native';
 
 import { colors, margins } from '../../lib/constants';
 
-const duration = 300; // делимое на 3
+const duration = 600; // делимое на 3
 
 export const Loading: React.FC = () => (
     <View style={styles.loading}>
@@ -22,17 +22,32 @@ const Dot: React.FC<IDotProps> = props => {
 
     function animatePlaceholder() {
         placeholderOpacity.current.setValue(0);
-        Animated.loop(
-            Animated.timing(placeholderOpacity.current, {
-                toValue: 1,
-                duration,
-                easing: Easing.linear
-            })
-        ).start();
+        Animated.sequence([
+            Animated.delay(props.delay || 0),
+            Animated.loop(
+                Animated.timing(placeholderOpacity.current, {
+                    toValue: 1,
+                    duration,
+                    easing: Easing.linear
+                })
+            )
+        ]).start();
+    }
+
+    const handleAppStateChange = (newState: string) => {
+        if (newState === 'active') {
+            animatePlaceholder();
+        }
     }
 
     useEffect(() => {
-        setTimeout(animatePlaceholder, props.delay || 0);
+        animatePlaceholder();
+
+        AppState.addEventListener('change', handleAppStateChange);
+
+        return () => {
+            AppState.removeEventListener('change', handleAppStateChange);
+        }
     }, []);
 
     return (
