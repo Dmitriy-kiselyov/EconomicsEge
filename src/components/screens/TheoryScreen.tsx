@@ -3,8 +3,6 @@ import { connect, DispatchProp } from 'react-redux';
 import { StyleSheet, View } from 'react-native';
 import PdfViewer from 'react-native-pdf';
 
-import { BackListener } from '../construct/BackListener';
-import { closeTheory } from '../../store/closeTheory';
 import { colors, margins } from '../../lib/constants';
 import { IFulfilledStore } from '../../typings/store';
 import { Loading } from '../construct/Loading';
@@ -16,7 +14,7 @@ interface IConnectProps {
 
 type ITheoryScreenPropsWithConnect = IConnectProps & DispatchProp;
 
-class TheoryScreenPresenter extends BackListener<ITheoryScreenPropsWithConnect> {
+class TheoryScreenPresenter extends React.PureComponent<ITheoryScreenPropsWithConnect> {
     render() {
         const { theoryPath } = this.props;
         const source = {
@@ -39,12 +37,6 @@ class TheoryScreenPresenter extends BackListener<ITheoryScreenPropsWithConnect> 
             </View>
         );
     }
-
-    protected handleBack = () => {
-        this.props.dispatch(closeTheory(true));
-
-        return true;
-    };
 }
 
 export const TheoryScreen = connect(

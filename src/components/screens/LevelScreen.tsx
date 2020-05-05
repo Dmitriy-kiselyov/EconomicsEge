@@ -3,11 +3,9 @@ import { StyleSheet, View } from 'react-native';
 import { connect, DispatchProp } from 'react-redux';
 
 import { FlatListFixed } from '../construct/FlatListFixed';
-import { closeLevel } from '../../store/closeLevel';
 import { IFulfilledStore, IStoreLevel } from '../../typings/store';
 import { margins } from '../../lib/constants';
 import { TaskCard } from '../TaskCard';
-import { BackListener } from '../construct/BackListener';
 import { NavigationExtended } from '../NavigationExtended';
 
 interface IConnectProps {
@@ -16,7 +14,7 @@ interface IConnectProps {
 
 type ILevelScreenProps = IConnectProps & DispatchProp;
 
-export class LevelScreenPresenter extends BackListener<ILevelScreenProps> {
+export class LevelScreenPresenter extends React.PureComponent<ILevelScreenProps> {
     render() {
         return (
             <View style={styles.screen}>
@@ -38,12 +36,6 @@ export class LevelScreenPresenter extends BackListener<ILevelScreenProps> {
             />
         )
     };
-
-    protected handleBack = () => {
-        this.props.dispatch(closeLevel());
-
-        return true;
-    }
 }
 
 const styles = StyleSheet.create({

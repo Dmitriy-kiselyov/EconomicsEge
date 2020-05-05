@@ -3,7 +3,6 @@ import ViewPager, { ViewPagerOnPageSelectedEventData } from '@react-native-commu
 import { Text, StyleSheet, View, ScrollView, NativeSyntheticEvent } from 'react-native';
 import { connect, DispatchProp } from 'react-redux';
 
-import { BackListener } from '../construct/BackListener';
 import { closeTask } from '../../store/closeTask';
 import { margins } from '../../lib/constants';
 import { IFulfilledStore, IStoreTask } from '../../typings/store';
@@ -17,7 +16,7 @@ interface IConnectProps {
 
 type ITasksScreenProps = IConnectProps & DispatchProp;
 
-class TasksScreenPresenter extends BackListener<ITasksScreenProps> {
+class TasksScreenPresenter extends React.PureComponent<ITasksScreenProps> {
     private currentTask = this.props.tasks[this.props.initialIndex];
 
     render() {
@@ -56,12 +55,6 @@ class TasksScreenPresenter extends BackListener<ITasksScreenProps> {
                 <Text style={styles.text}>{task.text}</Text>
             </ScrollView>
         )
-    }
-
-    protected handleBack = () => {
-        this.props.dispatch(closeTask());
-
-        return true;
     }
 }
 
