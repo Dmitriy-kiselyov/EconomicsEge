@@ -6,7 +6,6 @@ import PdfViewer from 'react-native-pdf';
 import { colors, margins } from '../../lib/constants';
 import { IFulfilledStore } from '../../typings/store';
 import { Loading } from '../construct/Loading';
-import { NavigationExtended } from '../NavigationExtended';
 
 interface IConnectProps {
     theoryPath: string;
@@ -22,18 +21,15 @@ class TheoryScreenPresenter extends React.PureComponent<ITheoryScreenPropsWithCo
         };
 
         return (
-            <View style={styles.screen}>
-                <NavigationExtended />
-                <View style={styles.pdfWrap}>
-                    <PdfViewer
-                        style={styles.pdf}
-                        source={source}
-                        spacing={2}
-                        fitPolicy={0}
-                        maxScale={1}
-                        activityIndicator={<Loading/>}
-                    />
-                </View>
+            <View style={styles.pdfWrap}>
+                <PdfViewer
+                    style={styles.pdf}
+                    source={source}
+                    spacing={2}
+                    fitPolicy={0}
+                    maxScale={1}
+                    activityIndicator={<Loading/>}
+                />
             </View>
         );
     }
@@ -46,10 +42,6 @@ export const TheoryScreen = connect(
 )(TheoryScreenPresenter);
 
 const styles = StyleSheet.create({
-    screen: {
-        flex: 1,
-        margin: margins.l
-    },
     pdfWrap: {
         flex: 1,
         alignItems: 'center',

@@ -3,7 +3,6 @@ import ViewPager, { ViewPagerOnPageSelectedEventData } from '@react-native-commu
 import { Text, StyleSheet, View, ScrollView, NativeSyntheticEvent } from 'react-native';
 import { connect, DispatchProp } from 'react-redux';
 
-import { closeTask } from '../../store/closeTask';
 import { margins } from '../../lib/constants';
 import { IFulfilledStore, IStoreTask } from '../../typings/store';
 import { openTasks } from '../../store/openTask';
@@ -23,18 +22,15 @@ class TasksScreenPresenter extends React.PureComponent<ITasksScreenProps> {
         const { tasks } = this.props;
 
         return (
-            <View style={styles.screen}>
-                <NavigationExtended />
-                <ViewPager
-                    style={styles.pager}
-                    initialPage={this.props.initialIndex}
-                    onPageSelected={this.handlePageChange}
-                >
-                    {
-                        tasks.map(task => this.renderTask(task))
-                    }
-                </ViewPager>
-            </View>
+            <ViewPager
+                style={styles.pager}
+                initialPage={this.props.initialIndex}
+                onPageSelected={this.handlePageChange}
+            >
+                {
+                    tasks.map(task => this.renderTask(task))
+                }
+            </ViewPager>
         );
     }
 
@@ -73,10 +69,6 @@ export const TasksScreen = connect(
 )(TasksScreenPresenter);
 
 const styles = StyleSheet.create({
-    screen: {
-        flex: 1,
-        margin: margins.l,
-    },
     pager: {
         flex: 1,
         marginHorizontal: -margins.l,

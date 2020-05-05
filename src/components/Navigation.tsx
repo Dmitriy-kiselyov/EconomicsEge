@@ -166,8 +166,6 @@ class NavigationPresenter extends BackListener<INavigationPropsWithConnect> {
 
             i--;
         }
-
-        this.siblings = siblings.slice(0, i + 1);
     }
 
     protected handleBack = () => {
@@ -180,7 +178,6 @@ class NavigationPresenter extends BackListener<INavigationPropsWithConnect> {
         const last = siblings.length - 1;
 
         this.props.dispatch(siblings[last].onClose());
-        this.siblings = this.siblings.slice(0, last);
 
         return true;
     }
