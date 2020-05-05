@@ -8,7 +8,7 @@ import { getStyleWithMod } from '../../lib/getStyleWithMod';
 interface IButtonProps {
     title: string;
     onClick?: () => void;
-    size: 'm' | 'l';
+    size: 's' | 'm' | 'l';
     outline?: boolean;
     style?: object;
     delay?: boolean;
@@ -60,6 +60,11 @@ const styles = StyleSheet.create({
         minWidth: 80,
         height: 50,
     },
+    buttonSizeS: {
+        borderRadius: 100,
+        elevation: 4,
+        height: 40,
+    },
     buttonOutline: {
         backgroundColor: colors.white,
         borderColor: colors.primary,
@@ -78,6 +83,9 @@ const styles = StyleSheet.create({
         fontSize: 30,
     },
     textSizeM: {
+        fontSize: 12,
+    },
+    textSizeS: {
         fontSize: 12,
     },
     textOutline: {

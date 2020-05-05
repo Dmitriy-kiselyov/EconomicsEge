@@ -42,7 +42,6 @@ export interface IActionCloseTask {
 
 export interface IActionOpenTheory {
     type: ACTION_TYPES.OPEN_THEORY;
-    theoryPath: string;
     levelId: string;
 }
 

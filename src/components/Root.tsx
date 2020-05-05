@@ -6,7 +6,7 @@ import { LevelScreen } from './screens/LevelScreen';
 import { IStore } from '../typings/store';
 import { TasksScreen } from './screens/TasksScreen';
 import { TheoryScreen } from './screens/TheoryScreen';
-// import { ExampleScreen } from './screens/ExampleScreen';
+//import { ExampleScreen } from './screens/ExampleScreen';
 
 interface IConnectProps {
     openedLevel: string | null;
@@ -17,7 +17,7 @@ interface IConnectProps {
 type IRootProps = IConnectProps & DispatchProp;
 
 const RootPresenter: React.FC<IRootProps> = props => {
-    // return <ExampleScreen />;
+    //return <ExampleScreen />;
 
     if (props.openedTheory) {
         return <TheoryScreen/>;

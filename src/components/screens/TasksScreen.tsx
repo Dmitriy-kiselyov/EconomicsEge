@@ -1,18 +1,16 @@
 import React from 'react';
-import ViewPager from '@react-native-community/viewpager';
-import { Text, StyleSheet, View, ScrollView } from 'react-native';
+import ViewPager, { ViewPagerOnPageSelectedEventData } from '@react-native-community/viewpager';
+import { Text, StyleSheet, View, ScrollView, NativeSyntheticEvent } from 'react-native';
 import { connect, DispatchProp } from 'react-redux';
 
 import { BackListener } from '../construct/BackListener';
 import { closeTask } from '../../store/closeTask';
 import { margins } from '../../lib/constants';
 import { IFulfilledStore, IStoreTask } from '../../typings/store';
-import { Title } from '../construct/Title';
-import { ScreenTitle } from '../construct/ScreenTitle';
+import { openTasks } from '../../store/openTask';
+import { NavigationExtended } from '../NavigationExtended';
 
 interface IConnectProps {
-    levelTitle: string;
-    testTitle: string;
     initialIndex: number;
     tasks: IStoreTask[];
 }
@@ -20,18 +18,18 @@ interface IConnectProps {
 type ITasksScreenProps = IConnectProps & DispatchProp;
 
 class TasksScreenPresenter extends BackListener<ITasksScreenProps> {
+    private currentTask = this.props.tasks[this.props.initialIndex];
+
     render() {
-        const { testTitle, levelTitle, tasks } = this.props;
+        const { tasks } = this.props;
 
         return (
             <View style={styles.screen}>
-                <ScreenTitle
-                    title={testTitle}
-                    subtitle={levelTitle}
-                />
+                <NavigationExtended />
                 <ViewPager
                     style={styles.pager}
                     initialPage={this.props.initialIndex}
+                    onPageSelected={this.handlePageChange}
                 >
                     {
                         tasks.map(task => this.renderTask(task))
@@ -41,10 +39,20 @@ class TasksScreenPresenter extends BackListener<ITasksScreenProps> {
         );
     }
 
+    private handlePageChange = (e: NativeSyntheticEvent<ViewPagerOnPageSelectedEventData>) => {
+        const taskPosition = e.nativeEvent.position;
+        const task = this.props.tasks[taskPosition];
+
+        if (this.currentTask !== task) { // вызывает событие при первом рендере
+            this.currentTask = task;
+
+            this.props.dispatch(openTasks(task));
+        }
+    }
+
     private renderTask(task: IStoreTask): React.ReactElement {
         return (
             <ScrollView key={task.path} style={styles.task}>
-                <Title size="m" title={task.title}/>
                 <Text style={styles.text}>{task.text}</Text>
             </ScrollView>
         )
@@ -66,8 +74,6 @@ export const TasksScreen = connect(
 
         return {
             initialIndex: taskIndex,
-            testTitle: level.testTitle,
-            levelTitle: level.title,
             tasks: level.tasks.map(taskId => state.tasks[taskId])
         };
     }

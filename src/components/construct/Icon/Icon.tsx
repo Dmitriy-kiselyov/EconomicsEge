@@ -9,6 +9,7 @@ export enum EIconTypes {
 export interface IIconProps {
     size: number;
     type: EIconTypes;
+    style?: object;
 }
 
 const icons = {
@@ -22,10 +23,15 @@ export const Icon: React.FC<IIconProps> = props => {
         height: props.size
     }
 
+    const styles = [style];
+    if (props.style) {
+        styles.push(props.style);
+    }
+
     return (
         <Image
             source={icons[props.type]}
-            style={style}
+            style={styles}
         />
     )
 }

@@ -95,10 +95,16 @@ function reduceCloseTask(state: IStore): IStore {
 }
 
 function reduceOpenTheory(state: IFulfilledStore, action: IActionOpenTheory): IStore {
+    const level = state.levels[action.levelId];
+
+    if (!level.theory) {
+        return state;
+    }
+
     return {
         ...state,
-        openedTheory: action.theoryPath,
-        openedTest: state.levels[action.levelId].testTitle,
+        openedTheory: level.theory,
+        openedTest: level.testTitle,
         openedLevel: action.levelId,
     }
 }
@@ -112,6 +118,7 @@ function reduceCloseTheory(state: IStore, action: IActionCloseTheory): IStore {
     if (action.closeLevel) {
         newState.openedTest = null;
         newState.openedLevel = null;
+        newState.openedTask = null;
     }
 
     return newState;

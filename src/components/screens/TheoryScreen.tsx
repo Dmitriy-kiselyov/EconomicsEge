@@ -6,34 +6,26 @@ import PdfViewer from 'react-native-pdf';
 import { BackListener } from '../construct/BackListener';
 import { closeTheory } from '../../store/closeTheory';
 import { colors, margins } from '../../lib/constants';
-import { ScreenTitle } from '../construct/ScreenTitle';
 import { IFulfilledStore } from '../../typings/store';
 import { Loading } from '../construct/Loading';
+import { NavigationExtended } from '../NavigationExtended';
 
 interface IConnectProps {
     theoryPath: string;
-    testTitle: string;
-    levelTitle: string;
 }
 
 type ITheoryScreenPropsWithConnect = IConnectProps & DispatchProp;
 
 class TheoryScreenPresenter extends BackListener<ITheoryScreenPropsWithConnect> {
     render() {
-        const { theoryPath, testTitle, levelTitle } = this.props;
+        const { theoryPath } = this.props;
         const source = {
             uri: `bundle-assets://${theoryPath}`
         };
 
         return (
             <View style={styles.screen}>
-                <ScreenTitle
-                    title={testTitle}
-                    subtitle="Теория"
-
-                    right={levelTitle}
-                    onRightClick={this.handleOpenLevel}
-                />
+                <NavigationExtended />
                 <View style={styles.pdfWrap}>
                     <PdfViewer
                         style={styles.pdf}
@@ -48,10 +40,6 @@ class TheoryScreenPresenter extends BackListener<ITheoryScreenPropsWithConnect> 
         );
     }
 
-    protected handleOpenLevel = () => {
-        this.props.dispatch(closeTheory());
-    }
-
     protected handleBack = () => {
         this.props.dispatch(closeTheory(true));
 
@@ -62,8 +50,6 @@ class TheoryScreenPresenter extends BackListener<ITheoryScreenPropsWithConnect> 
 export const TheoryScreen = connect(
     (store: IFulfilledStore): IConnectProps => ({
         theoryPath: store.openedTheory as string,
-        testTitle: store.openedTest as string,
-        levelTitle: store.levels[store.openedLevel as string].title,
     })
 )(TheoryScreenPresenter);
 

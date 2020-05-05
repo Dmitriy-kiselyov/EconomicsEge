@@ -42,7 +42,7 @@ export const TestInfoPresenter: React.FC<ITestSnippetPropsWithConnect> = props =
                 size="m"
                 outline
                 delay
-                onClick={() => dispatch(openTheory(theory, level.id))}
+                onClick={() => dispatch(openTheory(level.id))}
             />
         ) : null;
 
