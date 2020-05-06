@@ -1,4 +1,4 @@
-import { IStoreFulfillData, IStoreTask } from './store';
+import { IStoreFulfillData, IStoreTask, IStoreTaskState } from './store';
 
 export enum ACTION_TYPES {
     SET_TASKS = 'SET_TASKS',
@@ -8,7 +8,8 @@ export enum ACTION_TYPES {
     OPEN_TASK = 'OPEN_TASK',
     CLOSE_TASK = 'CLOSE_TASK',
     OPEN_THEORY = 'OPEN_THEORY',
-    CLOSE_THEORY = 'CLOSE_THEORY'
+    CLOSE_THEORY = 'CLOSE_THEORY',
+    SET_TASK_STATE = 'SET_TASK_STATE'
 }
 
 export interface IActionSetTasks {
@@ -50,5 +51,11 @@ export interface IActionCloseTheory {
     closeLevel?: boolean;
 }
 
+export interface IActionSetTaskState {
+    type: ACTION_TYPES.SET_TASK_STATE;
+    path: string;
+    state: IStoreTaskState;
+}
+
 export type IActions = IActionSetTasks | IActionOpenLevel | IActionCloseLevel | IActionSetTaskText | IActionOpenTask |
-    IActionCloseTask | IActionOpenTheory | IActionCloseTheory;
+    IActionCloseTask | IActionOpenTheory | IActionCloseTheory | IActionSetTaskState;

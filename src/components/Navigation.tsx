@@ -2,7 +2,7 @@ import React from 'react';
 import { connect, DispatchProp } from 'react-redux';
 import { View, Text, StyleSheet, ScrollView, Dimensions } from 'react-native';
 
-import { EIconTypes, Icon } from './construct/Icon/Icon';
+import { Icon } from './construct/Icon/Icon';
 import { colors, margins } from '../lib/constants';
 import { getStyleWithMod } from '../lib/getStyleWithMod';
 import { Touchable } from './construct/Touchable';
@@ -135,7 +135,7 @@ class NavigationPresenter extends BackListener<INavigationPropsWithConnect> {
 
         return (
             <React.Fragment key={sibling.text}>
-                <Icon type={EIconTypes.arrowRight} size={iconSize} />
+                <Icon type="arrowRight" size={iconSize} />
                 {this.renderSibling(sibling, textStyle, !last)}
             </React.Fragment>
         )

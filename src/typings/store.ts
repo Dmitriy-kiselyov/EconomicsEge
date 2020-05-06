@@ -47,4 +47,7 @@ export interface IStoreTask {
     title: string;
     path: string;
     text: string | null;
+    state: IStoreTaskState;
 }
+
+export type IStoreTaskState = 'none' | 'sent' | 'correct' | 'wrong';

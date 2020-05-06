@@ -72,6 +72,7 @@ export async function getFileOutput(path: string, extension: string): Promise<IS
             title: getFileName(file.name),
             path: file.path,
             text: null,
+            state: 'none' as 'none'
         }))
         .sort((a, b) => +a.title - +b.title);
 }

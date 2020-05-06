@@ -7,6 +7,7 @@ import { colors, margins } from '../lib/constants';
 import { fetchTaskText } from '../lib/fetchTaskText';
 import { IFulfilledStore, IStoreTask } from '../typings/store';
 import { openTasks } from '../store/openTask';
+import { Icon } from './construct/Icon/Icon';
 
 export interface ITaskCardProps {
     taskId: string;
@@ -22,7 +23,7 @@ const numberOfLines = 3;
 
 export const TaskCardPresenter: React.FC<ITaskCardPropsWithConnect> = props => {
     const { task } = props;
-    const { title, text, path } = task;
+    const { title, text, path, state } = task;
 
     const placeholderOpacity = useRef(new Animated.Value(0));
 
@@ -49,9 +50,12 @@ export const TaskCardPresenter: React.FC<ITaskCardPropsWithConnect> = props => {
         <View style={styles.card}>
             <Touchable delay onClick={() => props.dispatch(openTasks(task))}>
                 <View style={styles.padding}>
-                    <Text style={styles.title}>
-                        {title}
-                    </Text>
+                    <View style={styles.header}>
+                        <Text style={styles.title}>
+                            {title}
+                        </Text>
+                        { state === 'sent' && <Icon type="camera" size={20} />}
+                    </View>
                     {
                         text ?
                             <Text
@@ -97,6 +101,11 @@ const styles = StyleSheet.create({
     padding: {
         paddingHorizontal: margins.m,
         paddingBottom: margins.m,
+    },
+    header: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center'
     },
     title: {
         color: colors.black,

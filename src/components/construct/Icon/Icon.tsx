@@ -1,20 +1,18 @@
 import React from 'react';
 import { Image, ImageStyle } from 'react-native';
 
-export enum EIconTypes {
-    arrowRight = 'arrowRight',
-    arrowLeft = 'arrowLeft'
-}
+export type IIconTypes = 'arrowRight' | 'arrowLeft' | 'camera';
 
 export interface IIconProps {
     size: number;
-    type: EIconTypes;
+    type: IIconTypes;
     style?: object;
 }
 
-const icons = {
-    [EIconTypes.arrowRight]: require('./assets/arrow-right.png'),
-    [EIconTypes.arrowLeft]: require('./assets/arrow-left.png')
+const icons: Record<IIconTypes, any> = {
+    arrowRight: require('./assets/arrow-right.png'),
+    arrowLeft: require('./assets/arrow-left.png'),
+    camera: require('./assets/camera.png'),
 };
 
 export const Icon: React.FC<IIconProps> = props => {

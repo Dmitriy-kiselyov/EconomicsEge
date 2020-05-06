@@ -2,12 +2,14 @@ import { createStore } from 'redux';
 
 import { IFulfilledStore, IStore } from '../typings/store';
 import {
-    ACTION_TYPES, IActionCloseTheory,
+    ACTION_TYPES,
+    IActionCloseTheory,
     IActionOpenLevel,
     IActionOpenTask,
     IActionOpenTheory,
     IActions,
     IActionSetTasks,
+    IActionSetTaskState,
     IActionSetTaskText
 } from '../typings/actions';
 
@@ -33,6 +35,8 @@ function reducer(state: IStore | undefined, action: IActions): IStore {
             return reduceOpenTheory(state as IFulfilledStore, action);
         case ACTION_TYPES.CLOSE_THEORY:
             return reduceCloseTheory(state, action);
+        case ACTION_TYPES.SET_TASK_STATE:
+            return reduceSetTaskState(state as IFulfilledStore, action);
         default:
             return state;
     }
@@ -122,6 +126,19 @@ function reduceCloseTheory(state: IStore, action: IActionCloseTheory): IStore {
     }
 
     return newState;
+}
+
+function reduceSetTaskState(state: IFulfilledStore, action: IActionSetTaskState): IStore {
+    const task = state.tasks[action.path];
+    const newTask = { ...task, state: action.state };
+
+    return {
+        ...state,
+        tasks: {
+            ...state.tasks,
+            [action.path]: newTask
+        }
+    };
 }
 
 const initialStore: IStore = {
