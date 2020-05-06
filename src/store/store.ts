@@ -37,6 +37,10 @@ function reducer(state: IStore | undefined, action: IActions): IStore {
             return reduceCloseTheory(state, action);
         case ACTION_TYPES.SET_TASK_STATE:
             return reduceSetTaskState(state as IFulfilledStore, action);
+        case ACTION_TYPES.OPEN_SETTINGS:
+            return reduceOpenSettings(state);
+        case ACTION_TYPES.CLOSE_SETTINGS:
+            return reduceCloseSettings(state);
         default:
             return state;
     }
@@ -141,6 +145,20 @@ function reduceSetTaskState(state: IFulfilledStore, action: IActionSetTaskState)
     };
 }
 
+function reduceOpenSettings(state: IStore): IStore {
+    return {
+        ...state,
+        openedSettings: true
+    }
+}
+
+function reduceCloseSettings(state: IStore): IStore {
+    return {
+        ...state,
+        openedSettings: false
+    };
+}
+
 const initialStore: IStore = {
     exams: null,
     tests: null,
@@ -151,6 +169,7 @@ const initialStore: IStore = {
     openedLevel: null,
     openedTask: null,
     openedTheory: null,
+    openedSettings: false,
 };
 
 export const store = createStore(

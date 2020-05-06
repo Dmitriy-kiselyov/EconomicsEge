@@ -1049,6 +1049,21 @@
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.3.tgz#2ab0d5da2e5815f94b0b9d4b95d1e5f243ab2ca7"
   integrity sha512-KfRL3PuHmqQLOG+2tGpRO26Ctg+Cq1E01D2DMriKEATHgWLfeNDmq9e29Q9WIky0dQ3NPkd1mzYH8Lm936Z9qw==
 
+"@types/react-native-material-textfield@^0.16.3":
+  version "0.16.3"
+  resolved "https://registry.yarnpkg.com/@types/react-native-material-textfield/-/react-native-material-textfield-0.16.3.tgz#e4db8bba1debf5481c4cb63cb5875928642aa88c"
+  integrity sha512-nviHt7LfdNzVcgIGJavo/sn4tEwDZl+hLU5byNEva1Ixg6ZgJQbqwT45KaV1KS2KDzyjjaJl7bEZC9fPViT5hQ==
+  dependencies:
+    "@types/react" "*"
+    "@types/react-native" "*"
+
+"@types/react-native@*":
+  version "0.62.7"
+  resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.62.7.tgz#bfc5ed03ba576f288603daa3f67f0f67d9a8bf57"
+  integrity sha512-FGFEt9GcFVl//XxWmxkeBxAx0YnzyEhJpR8hOJrjfaFKZm0KjHzzyCmCksBAP2qHSTrcJCiBkIvYCX/kGiOgww==
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-native@^0.61.20":
   version "0.61.20"
   resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.61.20.tgz#937d8ed9768bdfc982e785563c07b4905ba0fd1f"
@@ -5193,7 +5208,7 @@ prompts@^2.0.1:
     kleur "^3.0.3"
     sisteransi "^1.0.4"
 
-prop-types@^15.5.10, prop-types@^15.6.2, prop-types@^15.7.2:
+prop-types@^15.5.10, prop-types@^15.5.9, prop-types@^15.6.2, prop-types@^15.7.2:
   version "15.7.2"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.7.2.tgz#52c41e75b8c87e72b9d9360e0206b99dcbffa6c5"
   integrity sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==
@@ -5260,6 +5275,13 @@ react-native-image-picker@^2.3.1:
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/react-native-image-picker/-/react-native-image-picker-2.3.1.tgz#1977b65e07793d2c0b2d1976fb675c5f75ad7f11"
   integrity sha512-c/a2h7/T7yBo5KlNQhcSn4xf4+6Li6LfJ59+GZT1ZzzWrj/6X8DiJ/TJBOlOZMC5tJriZKuRkWSsr74k6z+brw==
+
+react-native-material-textfield@^0.16.1:
+  version "0.16.1"
+  resolved "https://registry.yarnpkg.com/react-native-material-textfield/-/react-native-material-textfield-0.16.1.tgz#649e71344bb8a7225d5cea7c7b51cd38bcb2bbfc"
+  integrity sha512-pcV/ic3i6vYEODS7pvAMUYJ+evkzIB8cjXtSzkab9rBtYNGRpAlM0Yp8QNnjZ7foZqkj9Ynav0nguWcuJST10A==
+  dependencies:
+    prop-types "^15.5.9"
 
 react-native-pdf@^6.1.1:
   version "6.1.2"

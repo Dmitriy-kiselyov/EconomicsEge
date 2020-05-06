@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Button } from './construct/Button';
@@ -7,12 +7,14 @@ import { Navigation } from './Navigation';
 import { margins } from '../lib/constants';
 import { openTheory } from '../store/openTheory';
 import { IFulfilledStore } from '../typings/store';
+import { openSettings } from '../store/openSettings';
 
 export const NavigationExtended: React.FC<{}> = () => {
     const dispatch = useDispatch();
     const level = useSelector((state: IFulfilledStore) => state.openedLevel && state.levels[state.openedLevel]);
     const openedTheory = useSelector((state: IFulfilledStore) => state.openedTheory);
     const openedTask = useSelector((state: IFulfilledStore) => state.openedTask);
+    const openedSettings = useSelector((state: IFulfilledStore) => state.openedSettings);
 
     const buttons: React.ReactElement[] = [];
     let first = true;
@@ -24,22 +26,31 @@ export const NavigationExtended: React.FC<{}> = () => {
         first = false;
     }
 
-    if (level && level.theory && !openedTheory) {
+    if (level && level.theory && !openedTheory && !openedSettings) {
         const handleOpenTheory = () => dispatch(openTheory(level.id));
 
         pushButton("Теория", handleOpenTheory);
     }
 
-    if (level && !openedTask && !openedTheory) {
+    if (level && !openedTask && !openedTheory && !openedSettings) {
         pushButton('Самостоятельная работа', () => {});
+    }
+
+    if (!openedTheory && !openedSettings) {
+        pushButton('Настройки', () => dispatch(openSettings()));
     }
 
     let buttonsElement = null;
     if (buttons.length) {
         buttonsElement = (
-            <View style={styles.buttons}>
+            <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                style={styles.scroll}
+                contentContainerStyle={styles.buttons}
+            >
                 {buttons}
-            </View>
+            </ScrollView>
         )
     }
 
@@ -52,8 +63,16 @@ export const NavigationExtended: React.FC<{}> = () => {
 };
 
 const styles = StyleSheet.create({
-    buttons: {
+    scroll: {
+        marginHorizontal: -margins.l,
         marginTop: margins.m,
+        marginBottom: -margins.s, // shadow compensation
+        flexShrink: 0,
+        flexGrow: 0,
+    },
+    buttons: {
+        paddingBottom: margins.s, // shadow
+        paddingHorizontal: margins.l,
         flexDirection: 'row'
     },
     marginLeft: {

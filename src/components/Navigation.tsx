@@ -12,6 +12,7 @@ import { closeLevel } from '../store/closeLevel';
 import { closeTask } from '../store/closeTask';
 import { closeTheory } from '../store/closeTheory';
 import { IActions } from '../typings/actions';
+import { closeSettings } from '../store/closeSettings';
 
 const fontL = 35;
 const fontM = 20;
@@ -21,7 +22,8 @@ interface IConnectProps {
     test: string | null;
     level: string | null;
     task: string | null;
-    theory?: boolean;
+    theory: boolean;
+    settings: boolean;
 }
 
 type INavigationPropsWithConnect = IConnectProps & DispatchProp;
@@ -57,7 +59,7 @@ class NavigationPresenter extends BackListener<INavigationPropsWithConnect> {
     }
 
     private getSiblings(): ISibling[] {
-        const { test, level, task, theory } = this.props;
+        const { test, level, task, theory, settings } = this.props;
         const siblings: ISibling[] = [];
 
         test && siblings.push({
@@ -79,6 +81,11 @@ class NavigationPresenter extends BackListener<INavigationPropsWithConnect> {
             text: 'Теория',
             onClose: closeTheory
         });
+
+        settings && siblings.push({
+            text: 'Настройки',
+            onClose: closeSettings
+        })
 
         return siblings;
     }
@@ -111,10 +118,9 @@ class NavigationPresenter extends BackListener<INavigationPropsWithConnect> {
                     ref={this.scrollRef}
                     horizontal
                     showsHorizontalScrollIndicator={false}
+                    contentContainerStyle={styles.scrollContent}
                 >
-                    <View style={styles.scrollContent}>
-                        {content}
-                    </View>
+                    {content}
                 </ScrollView>
             </View>
         )
@@ -189,6 +195,7 @@ export const Navigation = connect(
         level: state.openedLevel ? state.levels[state.openedLevel].title : null,
         task: state.openedTask ? 'Задача ' + state.tasks[state.openedTask].title : null,
         theory: Boolean(state.openedTheory),
+        settings: state.openedSettings
     })
 )(NavigationPresenter);
 

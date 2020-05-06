@@ -9,7 +9,9 @@ export enum ACTION_TYPES {
     CLOSE_TASK = 'CLOSE_TASK',
     OPEN_THEORY = 'OPEN_THEORY',
     CLOSE_THEORY = 'CLOSE_THEORY',
-    SET_TASK_STATE = 'SET_TASK_STATE'
+    SET_TASK_STATE = 'SET_TASK_STATE',
+    OPEN_SETTINGS = 'OPEN_SETTINGS',
+    CLOSE_SETTINGS = 'CLOSE_SETTINGS'
 }
 
 export interface IActionSetTasks {
@@ -57,5 +59,14 @@ export interface IActionSetTaskState {
     state: IStoreTaskState;
 }
 
+export interface IActionOpenSettings {
+    type: ACTION_TYPES.OPEN_SETTINGS;
+}
+
+export interface IActionCloseSettings {
+    type: ACTION_TYPES.CLOSE_SETTINGS;
+}
+
 export type IActions = IActionSetTasks | IActionOpenLevel | IActionCloseLevel | IActionSetTaskText | IActionOpenTask |
-    IActionCloseTask | IActionOpenTheory | IActionCloseTheory | IActionSetTaskState;
+    IActionCloseTask | IActionOpenTheory | IActionCloseTheory | IActionSetTaskState | IActionOpenSettings |
+    IActionCloseSettings;

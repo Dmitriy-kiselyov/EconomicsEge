@@ -9,12 +9,14 @@ import { TasksScreen } from './screens/TasksScreen';
 import { TheoryScreen } from './screens/TheoryScreen';
 import { margins } from '../lib/constants';
 import { NavigationExtended } from './NavigationExtended';
+import { SettingsScreen } from './screens/SettingsScreen';
 //import { ExampleScreen } from './screens/ExampleScreen';
 
 interface IConnectProps {
     openedLevel: string | null;
     openedTask: string | null;
     openedTheory: string | null;
+    openedSettings: boolean;
 }
 
 type IRootProps = IConnectProps & DispatchProp;
@@ -43,6 +45,10 @@ interface IContent {
 }
 
 function getContent(props: IRootProps): IContent {
+    if (props.openedSettings) {
+        return { element: <SettingsScreen />, navigation: true };
+    }
+
     if (props.openedTheory) {
         return { element: <TheoryScreen/>, navigation: true };
     }
@@ -69,6 +75,7 @@ export const Root = connect(
     (state: IStore): IConnectProps => ({
         openedLevel: state.openedLevel,
         openedTask: state.openedTask,
-        openedTheory: state.openedTheory
+        openedTheory: state.openedTheory,
+        openedSettings: state.openedSettings
     })
 )(RootPresenter);

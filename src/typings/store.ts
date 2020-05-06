@@ -3,6 +3,7 @@ interface ICommonStore {
     openedLevel: string | null;
     openedTask: string | null;
     openedTheory: string | null;
+    openedSettings: boolean;
 }
 
 export interface IEmptyStore extends ICommonStore {
