@@ -5,8 +5,8 @@ import { connect, DispatchProp } from 'react-redux';
 import ImagePicker, { ImagePickerResponse } from 'react-native-image-picker';
 
 import { colors, margins } from '../../lib/constants';
-import { IFulfilledStore, IStoreTask } from '../../typings/store';
-import { openTasks } from '../../store/openTask';
+import { IFulfilledStore, IStoreExam, IStoreTask } from '../../typings/store';
+import { openTask } from '../../store/openTask';
 import { Button } from '../construct/Button';
 import { setTaskState } from '../../store/setTaskState';
 
@@ -15,9 +15,9 @@ interface IConnectProps {
     tasks: IStoreTask[];
 }
 
-type ITasksScreenProps = IConnectProps & DispatchProp;
+type ITaskScreenProps = IConnectProps & DispatchProp;
 
-class TasksScreenPresenter extends React.PureComponent<ITasksScreenProps> {
+class TaskScreenPresenter extends React.PureComponent<ITaskScreenProps> {
     render() {
         const { tasks } = this.props;
 
@@ -58,6 +58,7 @@ class TasksScreenPresenter extends React.PureComponent<ITasksScreenProps> {
             }
 
             //TODO: SEND PHOTO
+            console.log('PATH', this.getCurrentTask());
             this.props.dispatch(setTaskState(this.getCurrentTask().path, 'sent'));
         });
     }
@@ -67,7 +68,7 @@ class TasksScreenPresenter extends React.PureComponent<ITasksScreenProps> {
         const task = this.props.tasks[taskPosition];
 
         if (this.getCurrentTask() !== task) { // вызывает событие при первом рендере
-            this.props.dispatch(openTasks(task));
+            this.props.dispatch(openTask(task));
         }
     }
 
@@ -84,9 +85,20 @@ class TasksScreenPresenter extends React.PureComponent<ITasksScreenProps> {
     }
 }
 
-export const TasksScreen = connect(
+export const TaskScreen = connect(
     (state: IFulfilledStore): IConnectProps => {
         const openedTask = state.openedTask as string;
+
+        if (state.openedExam) {
+            const exam = state.exams.find(exam => exam.title === state.openedExam) as IStoreExam;
+
+            return {
+                initialIndex: exam.tasks.indexOf(openedTask),
+                tasks: exam.tasks.map(taskId => state.tasks[taskId])
+            }
+        }
+
+        // openedLevel
         const openedLevel = state.openedLevel as string;
         const level = state.levels[openedLevel];
         const taskIndex = level.tasks.indexOf(openedTask);
@@ -96,7 +108,7 @@ export const TasksScreen = connect(
             tasks: level.tasks.map(taskId => state.tasks[taskId])
         };
     }
-)(TasksScreenPresenter);
+)(TaskScreenPresenter);
 
 const styles = StyleSheet.create({
     pager: {

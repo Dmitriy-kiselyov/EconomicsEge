@@ -10,6 +10,7 @@ import { getTasks } from '../../lib/getTasks';
 import { setTasks } from '../../store/setTasks';
 import { IStore, IStoreExam, IStoreTest } from '../../typings/store';
 import { margins } from '../../lib/constants';
+import { openExam } from '../../store/openExam';
 
 interface IConnectProps {
     exams: IStoreExam[] | null;
@@ -54,6 +55,8 @@ export class MainActivityPresenter extends React.PureComponent<IAppProps> {
                                 title={exam.title}
                                 key={exam.title}
                                 size="l"
+                                delay
+                                onClick={() => this.props.dispatch(openExam(exam.title))}
                             />
                         ))
                     }

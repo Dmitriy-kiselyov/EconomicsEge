@@ -13,6 +13,7 @@ import { closeTask } from '../store/closeTask';
 import { closeTheory } from '../store/closeTheory';
 import { IActions } from '../typings/actions';
 import { closeSettings } from '../store/closeSettings';
+import { closeExam } from '../store/closeExam';
 
 const fontL = 35;
 const fontM = 20;
@@ -20,6 +21,7 @@ const iconSize = 16;
 
 interface IConnectProps {
     test: string | null;
+    exam: string | null;
     level: string | null;
     task: string | null;
     theory: boolean;
@@ -59,12 +61,17 @@ class NavigationPresenter extends BackListener<INavigationPropsWithConnect> {
     }
 
     private getSiblings(): ISibling[] {
-        const { test, level, task, theory, settings } = this.props;
+        const { test, exam, level, task, theory, settings } = this.props;
         const siblings: ISibling[] = [];
 
         test && siblings.push({
             text: test,
             onClose: closeLevel
+        });
+
+        exam && siblings.push({
+            text: exam,
+            onClose: closeExam
         });
 
         level && siblings.push({
@@ -165,6 +172,13 @@ class NavigationPresenter extends BackListener<INavigationPropsWithConnect> {
 
     private onSiblingClick(sibling: ISibling): void {
         const { siblings } = this;
+
+        if (siblings.length === 1) {
+            this.props.dispatch(siblings[0].onClose());
+
+            return;
+        }
+
         let i = siblings.length - 1;
 
         while (i > 0 && siblings[i] !== sibling) {
@@ -192,6 +206,7 @@ class NavigationPresenter extends BackListener<INavigationPropsWithConnect> {
 export const Navigation = connect(
     (state: IFulfilledStore): IConnectProps => ({
         test: state.openedTest,
+        exam: state.openedExam,
         level: state.openedLevel ? state.levels[state.openedLevel].title : null,
         task: state.openedTask ? 'Задача ' + state.tasks[state.openedTask].title : null,
         theory: Boolean(state.openedTheory),

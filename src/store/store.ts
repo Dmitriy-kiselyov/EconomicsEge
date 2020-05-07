@@ -4,6 +4,7 @@ import { IFulfilledStore, IStore } from '../typings/store';
 import {
     ACTION_TYPES,
     IActionCloseTheory,
+    IActionOpenExam,
     IActionOpenLevel,
     IActionOpenTask,
     IActionOpenTheory,
@@ -41,6 +42,10 @@ function reducer(state: IStore | undefined, action: IActions): IStore {
             return reduceOpenSettings(state);
         case ACTION_TYPES.CLOSE_SETTINGS:
             return reduceCloseSettings(state);
+        case ACTION_TYPES.OPEN_EXAM:
+            return reduceOpenExam(state, action);
+        case ACTION_TYPES.CLOSE_EXAM:
+            return reduceCloseExam(state);
         default:
             return state;
     }
@@ -159,6 +164,20 @@ function reduceCloseSettings(state: IStore): IStore {
     };
 }
 
+function reduceOpenExam(state: IStore, action: IActionOpenExam): IStore {
+    return {
+        ...state,
+        openedExam: action.title
+    }
+}
+
+function reduceCloseExam(state: IStore): IStore {
+    return {
+        ...state,
+        openedExam: null
+    }
+}
+
 const initialStore: IStore = {
     exams: null,
     tests: null,
@@ -166,6 +185,7 @@ const initialStore: IStore = {
     tasks: null,
 
     openedTest: null,
+    openedExam: null,
     openedLevel: null,
     openedTask: null,
     openedTheory: null,

@@ -6,7 +6,7 @@ import { Touchable } from './construct/Touchable';
 import { colors, margins } from '../lib/constants';
 import { fetchTaskText } from '../lib/fetchTaskText';
 import { IFulfilledStore, IStoreTask } from '../typings/store';
-import { openTasks } from '../store/openTask';
+import { openTask } from '../store/openTask';
 import { Icon } from './construct/Icon/Icon';
 
 export interface ITaskCardProps {
@@ -48,7 +48,7 @@ export const TaskCardPresenter: React.FC<ITaskCardPropsWithConnect> = props => {
 
     return (
         <View style={styles.card}>
-            <Touchable delay onClick={() => props.dispatch(openTasks(task))}>
+            <Touchable delay onClick={() => props.dispatch(openTask(task))}>
                 <View style={styles.padding}>
                     <View style={styles.header}>
                         <Text style={styles.title}>

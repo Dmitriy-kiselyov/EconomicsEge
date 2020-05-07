@@ -3,9 +3,9 @@ import { connect, DispatchProp } from 'react-redux';
 import { StyleSheet, View } from 'react-native';
 
 import { MainScreen } from './screens/MainScreen';
-import { LevelScreen } from './screens/LevelScreen';
+import { TaskListScreen } from './screens/TaskListScreen';
 import { IStore } from '../typings/store';
-import { TasksScreen } from './screens/TasksScreen';
+import { TaskScreen } from './screens/TaskScreen';
 import { TheoryScreen } from './screens/TheoryScreen';
 import { margins } from '../lib/constants';
 import { NavigationExtended } from './NavigationExtended';
@@ -14,6 +14,7 @@ import { SettingsScreen } from './screens/SettingsScreen';
 
 interface IConnectProps {
     openedLevel: string | null;
+    openedExam: string | null;
     openedTask: string | null;
     openedTheory: string | null;
     openedSettings: boolean;
@@ -54,11 +55,11 @@ function getContent(props: IRootProps): IContent {
     }
 
     if (props.openedTask) {
-        return { element: <TasksScreen/>, navigation: true };
+        return { element: <TaskScreen/>, navigation: true };
     }
 
-    if (props.openedLevel) {
-        return { element: <LevelScreen/>, navigation: true };
+    if (props.openedLevel || props.openedExam) {
+        return { element: <TaskListScreen/>, navigation: true };
     }
 
     return { element: <MainScreen/> };
@@ -76,6 +77,7 @@ export const Root = connect(
         openedLevel: state.openedLevel,
         openedTask: state.openedTask,
         openedTheory: state.openedTheory,
-        openedSettings: state.openedSettings
+        openedSettings: state.openedSettings,
+        openedExam: state.openedExam
     })
 )(RootPresenter);

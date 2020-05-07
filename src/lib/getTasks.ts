@@ -1,6 +1,13 @@
 import fs from 'react-native-fs';
 
-import { IStoreExam, IStoreLevels, IStoreTasks, IStoreTest, IStoreTask, IStoreFulfillData } from '../typings/store';
+import {
+    IStoreExam,
+    IStoreLevels,
+    IStoreTasks,
+    IStoreTest,
+    IStoreTask,
+    IStoreFulfillData,
+} from '../typings/store';
 
 interface IDirOutput {
     path: string;
@@ -8,19 +15,47 @@ interface IDirOutput {
 }
 
 export async function getTasks(): Promise<IStoreFulfillData> {
-    const exams: IStoreExam[] = [
-        {
-            title: 'ОГЭ',
-            tasks: [],
-        },
-        {
-            title: 'ЕГЭ',
-            tasks: [],
+    const tasks: IStoreTasks = {};
+    const exams = await getExamTasks(tasks);
+    const { tests, levels } = await getTestTasks(tasks);
+
+    return {
+        exams,
+        tests,
+        levels,
+        tasks
+    };
+}
+
+async function getExamTasks(tasks: IStoreTasks): Promise<IStoreExam[]> {
+    const exams: IStoreExam[] = [];
+
+    const dirs = await getDirOutput('tasks/exams');
+
+    for (const dir of dirs) {
+        const tasksOutput = await getFileOutput(dir.path, 'txt');
+
+        for (const task of tasksOutput) {
+            tasks[task.path] = task;
         }
-    ];
+
+        exams.push({
+            title: dir.name,
+            tasks: tasksOutput.map(task => task.path)
+        });
+    }
+
+    return exams;
+}
+
+interface ITestTasks {
+    tests: IStoreTest[];
+    levels: IStoreLevels;
+}
+
+async function getTestTasks(tasks: IStoreTasks): Promise<ITestTasks> {
     const tests: IStoreTest[] = [];
     const levels: IStoreLevels = {};
-    const tasks: IStoreTasks = {};
 
     const testsOutput = await getDirOutput('tasks/tests');
 
@@ -49,7 +84,7 @@ export async function getTasks(): Promise<IStoreFulfillData> {
         });
     }
 
-    return { exams, tests, levels, tasks };
+    return { tests, levels };
 }
 
 export async function getDirOutput(path: string): Promise<IDirOutput[]> {

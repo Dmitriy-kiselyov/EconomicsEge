@@ -11,7 +11,9 @@ export enum ACTION_TYPES {
     CLOSE_THEORY = 'CLOSE_THEORY',
     SET_TASK_STATE = 'SET_TASK_STATE',
     OPEN_SETTINGS = 'OPEN_SETTINGS',
-    CLOSE_SETTINGS = 'CLOSE_SETTINGS'
+    CLOSE_SETTINGS = 'CLOSE_SETTINGS',
+    OPEN_EXAM = 'OPEN_EXAM',
+    CLOSE_EXAM = 'CLOSE_EXAM'
 }
 
 export interface IActionSetTasks {
@@ -67,6 +69,15 @@ export interface IActionCloseSettings {
     type: ACTION_TYPES.CLOSE_SETTINGS;
 }
 
+export interface IActionOpenExam {
+    type: ACTION_TYPES.OPEN_EXAM;
+    title: string;
+}
+
+export interface IActionCloseExam {
+    type: ACTION_TYPES.CLOSE_EXAM;
+}
+
 export type IActions = IActionSetTasks | IActionOpenLevel | IActionCloseLevel | IActionSetTaskText | IActionOpenTask |
     IActionCloseTask | IActionOpenTheory | IActionCloseTheory | IActionSetTaskState | IActionOpenSettings |
-    IActionCloseSettings;
+    IActionCloseSettings | IActionOpenExam | IActionCloseExam;

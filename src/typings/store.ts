@@ -1,5 +1,6 @@
 interface ICommonStore {
     openedTest: string | null;
+    openedExam: string | null;
     openedLevel: string | null;
     openedTask: string | null;
     openedTheory: string | null;

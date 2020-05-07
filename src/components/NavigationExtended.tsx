@@ -13,7 +13,6 @@ export const NavigationExtended: React.FC<{}> = () => {
     const dispatch = useDispatch();
     const level = useSelector((state: IFulfilledStore) => state.openedLevel && state.levels[state.openedLevel]);
     const openedTheory = useSelector((state: IFulfilledStore) => state.openedTheory);
-    const openedTask = useSelector((state: IFulfilledStore) => state.openedTask);
     const openedSettings = useSelector((state: IFulfilledStore) => state.openedSettings);
 
     const buttons: React.ReactElement[] = [];
@@ -30,10 +29,6 @@ export const NavigationExtended: React.FC<{}> = () => {
         const handleOpenTheory = () => dispatch(openTheory(level.id));
 
         pushButton("Теория", handleOpenTheory);
-    }
-
-    if (level && !openedTask && !openedTheory && !openedSettings) {
-        pushButton('Самостоятельная работа', () => {});
     }
 
     if (!openedTheory && !openedSettings) {
