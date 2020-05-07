@@ -9,6 +9,8 @@ import { IFulfilledStore, IStoreExam, IStoreTask } from '../../typings/store';
 import { openTask } from '../../store/openTask';
 import { Button } from '../construct/Button';
 import { setTaskState } from '../../store/setTaskState';
+import { ClickableIcon } from '../construct/ClickableIcon';
+import { getStyleWithMod } from '../../lib/getStyleWithMod';
 
 interface IConnectProps {
     initialIndex: number;
@@ -39,16 +41,58 @@ class TaskScreenPresenter extends React.PureComponent<ITaskScreenProps> {
 
     private renderFooter(): React.ReactElement {
         const { state } = this.getCurrentTask();
+        const footerStyle = getStyleWithMod(styles, 'footer', { status: state });
 
         return (
-            <View style={styles.footer}>
+            <View style={footerStyle}>
                 {
-                    state === 'none' ?
-                        <Button title="Сфотографировать и отправить" size="s" delay onClick={this.handleOpenCamera} /> :
-                        <Text style={styles.statusText}>Отправлено учителю</Text>
+                    state !== 'none' &&
+                    <ClickableIcon
+                        size={45}
+                        type={state === 'wrong' ? 'wrongActive' : 'wrong'}
+                        onClick={this.handleWrongClick}
+                    />
+                }
+                {this.renderStatus()}
+                {
+                    state !== 'none' &&
+                    <ClickableIcon
+                        size={45}
+                        type={state === 'correct' ? 'correctActive' : 'correct'}
+                        onClick={this.handleCorrectClick}
+                    />
                 }
             </View>
         );
+    }
+
+    private renderStatus(): React.ReactElement {
+        const { state } = this.getCurrentTask();
+
+        switch (state) {
+            case 'none':
+                return <Button title="Сфотографировать и отправить" size="s" delay onClick={this.handleOpenCamera} />;
+            case 'wrong':
+                return <Button title="Попробовать еще раз" size="s" delay onClick={this.handleOpenCamera} />;
+            case 'correct':
+                return <Text style={styles.statusText}>Верное решение</Text>;
+            case 'sent':
+                return <Text style={styles.statusText}>Отправлено учителю</Text>;
+        }
+    }
+
+    private handleCorrectClick = () => {
+        const { state } = this.getCurrentTask();
+        const status = state === 'correct' ? 'sent' : 'correct';
+
+        this.props.dispatch(setTaskState(this.getCurrentTask().path, status));
+    }
+
+    private handleWrongClick = () => {
+        const { state } = this.getCurrentTask();
+        const status = state === 'wrong' ? 'sent' : 'wrong';
+
+        this.props.dispatch(setTaskState(this.getCurrentTask().path, status));
     }
 
     private handleOpenCamera = () => {
@@ -58,7 +102,6 @@ class TaskScreenPresenter extends React.PureComponent<ITaskScreenProps> {
             }
 
             //TODO: SEND PHOTO
-            console.log('PATH', this.getCurrentTask());
             this.props.dispatch(setTaskState(this.getCurrentTask().path, 'sent'));
         });
     }
@@ -122,8 +165,15 @@ const styles = StyleSheet.create({
         paddingBottom: margins.l,
     },
     footer: {
+        justifyContent: 'space-between',
+        alignItems: 'center',
         flexDirection: 'row',
-        alignSelf: 'center'
+        alignSelf: 'center',
+        width: '100%',
+        height: 55
+    },
+    footerStatusNone: {
+        justifyContent: 'center',
     },
     statusText: {
         fontSize: 15,

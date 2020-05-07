@@ -15,8 +15,14 @@ export interface ITestInfoProps {
     style?: object;
 }
 
+interface IStatusCount {
+    correct: number;
+    wrong: number;
+}
+
 interface IConnectProps {
     levels: IStoreLevel[];
+    statusCount: IStatusCount[];
 }
 
 type ITestSnippetPropsWithConnect = ITestInfoProps & IConnectProps & DispatchProp;
@@ -30,10 +36,11 @@ const multiLangTasksCount: IMultiLang = {
 
 export const TestInfoPresenter: React.FC<ITestSnippetPropsWithConnect> = props => {
     const dispatch = useDispatch();
-    const { levels, test } = props;
+    const { levels, test, statusCount } = props;
 
     const Levels = levels.map((level, i) => {
         const { theory } = level;
+        const { correct, wrong } = statusCount[i];
 
         const TheoryButton = theory ? (
             <Button
@@ -62,6 +69,11 @@ export const TestInfoPresenter: React.FC<ITestSnippetPropsWithConnect> = props =
                         level.tasks.length + ' ' + multiLang(level.tasks.length, multiLangTasksCount)
                     }
                 </Text>
+                {
+                    correct || wrong ?
+                        <Text style={styles.info}>{correct} ✔  {wrong} ✘</Text> :
+                        <Text style={styles.info}>Нет попыток</Text>
+                }
             </View>
         )
     });
@@ -83,10 +95,29 @@ export const TestInfoPresenter: React.FC<ITestSnippetPropsWithConnect> = props =
 };
 
 export const TestInfo = connect(
-    (state: IFulfilledStore, props: ITestInfoProps): IConnectProps => ({
-        levels: props.test.levels.map(levelId => state.levels[levelId])
-    })
+    (state: IFulfilledStore, props: ITestInfoProps): IConnectProps => {
+        const levels = props.test.levels.map(levelId => state.levels[levelId]);
+
+        return {
+            levels,
+            statusCount: levels.map(level => getStatusCount(state, level))
+        }
+    }
 )(TestInfoPresenter);
+
+function getStatusCount(state: IFulfilledStore, level: IStoreLevel): IStatusCount {
+    let correct = 0;
+    let wrong = 0;
+
+    for (const taskId of level.tasks) {
+        const task = state.tasks[taskId];
+
+        task.state === 'correct' && correct++;
+        task.state === 'wrong' && wrong++;
+    }
+
+    return { correct, wrong };
+}
 
 const styles = StyleSheet.create({
     scroll: {

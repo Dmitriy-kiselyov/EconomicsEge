@@ -54,7 +54,9 @@ export const TaskCardPresenter: React.FC<ITaskCardPropsWithConnect> = props => {
                         <Text style={styles.title}>
                             {title}
                         </Text>
-                        { state === 'sent' && <Icon type="camera" size={20} />}
+                        { state === 'sent' && <Icon type="camera" size={18} />}
+                        { state === 'correct' && <Icon type="correctActive" size={16} />}
+                        { state === 'wrong' && <Icon type="wrongActive" size={16} />}
                     </View>
                     {
                         text ?

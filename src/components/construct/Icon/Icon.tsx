@@ -1,7 +1,7 @@
 import React from 'react';
 import { Image, ImageStyle } from 'react-native';
 
-export type IIconTypes = 'arrowRight' | 'arrowLeft' | 'camera';
+export type IIconTypes = 'arrowRight' | 'arrowLeft' | 'camera' | 'correct' | 'correctActive' | 'wrong' | 'wrongActive';
 
 export interface IIconProps {
     size: number;
@@ -13,6 +13,10 @@ const icons: Record<IIconTypes, any> = {
     arrowRight: require('./assets/arrow-right.png'),
     arrowLeft: require('./assets/arrow-left.png'),
     camera: require('./assets/camera.png'),
+    correct: require('./assets/correct.png'),
+    correctActive: require('./assets/correct-active.png'),
+    wrong: require('./assets/wrong.png'),
+    wrongActive: require('./assets/wrong-active.png')
 };
 
 export const Icon: React.FC<IIconProps> = props => {
@@ -21,15 +25,10 @@ export const Icon: React.FC<IIconProps> = props => {
         height: props.size
     }
 
-    const styles = [style];
-    if (props.style) {
-        styles.push(props.style);
-    }
-
     return (
         <Image
             source={icons[props.type]}
-            style={styles}
+            style={[style, props.style]}
         />
     )
 }
