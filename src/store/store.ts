@@ -1,6 +1,6 @@
 import { createStore } from 'redux';
 
-import { IFulfilledStore, IStore } from '../typings/store';
+import { IFulfilledStore, IStore, IStoreTest } from '../typings/store';
 import {
     ACTION_TYPES,
     IActionCloseTheory,
@@ -13,6 +13,7 @@ import {
     IActionSetTaskState,
     IActionSetTaskText
 } from '../typings/actions';
+import { findTest } from './findTest';
 
 function reducer(state: IStore | undefined, action: IActions): IStore {
     if (!state) {
@@ -108,17 +109,16 @@ function reduceCloseTask(state: IStore): IStore {
 }
 
 function reduceOpenTheory(state: IFulfilledStore, action: IActionOpenTheory): IStore {
-    const level = state.levels[action.levelId];
+    const test = findTest(state, action.testTitle);
 
-    if (!level.theory) {
+    if (!test || !test.theory) {
         return state;
     }
 
     return {
         ...state,
-        openedTheory: level.theory,
-        openedTest: level.testTitle,
-        openedLevel: action.levelId,
+        openedTheory: test.theory,
+        openedTest: action.testTitle,
     }
 }
 

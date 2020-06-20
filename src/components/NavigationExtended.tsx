@@ -8,10 +8,12 @@ import { margins } from '../lib/constants';
 import { openTheory } from '../store/openTheory';
 import { IFulfilledStore } from '../typings/store';
 import { openSettings } from '../store/openSettings';
+import { findTest } from '../store/findTest';
 
 export const NavigationExtended: React.FC<{}> = () => {
     const dispatch = useDispatch();
     const level = useSelector((state: IFulfilledStore) => state.openedLevel && state.levels[state.openedLevel]);
+    const test = useSelector((state: IFulfilledStore) => state.openedTest && findTest(state, state.openedTest));
     const openedTheory = useSelector((state: IFulfilledStore) => state.openedTheory);
     const openedSettings = useSelector((state: IFulfilledStore) => state.openedSettings);
 
@@ -25,8 +27,8 @@ export const NavigationExtended: React.FC<{}> = () => {
         first = false;
     }
 
-    if (level && level.theory && !openedTheory && !openedSettings) {
-        const handleOpenTheory = () => dispatch(openTheory(level.id));
+    if (level && (test && test.theory) && !openedTheory && !openedSettings) {
+        const handleOpenTheory = () => dispatch(openTheory(test.title));
 
         pushButton("Теория", handleOpenTheory);
     }

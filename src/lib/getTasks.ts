@@ -74,13 +74,13 @@ async function getTestTasks(tasks: IStoreTasks): Promise<ITestTasks> {
                 title: level.name,
                 testTitle: test.name,
                 tasks: tasksOutput.map(task => task.path),
-                theory: await getTheoryPath(level.path)
             }
         }
 
         tests.push({
             title: test.name,
-            levels: levelsOutput.map(level => level.path)
+            levels: levelsOutput.map(level => level.path),
+            theory: await getTheoryPath(test.path)
         });
     }
 
@@ -112,8 +112,8 @@ export async function getFileOutput(path: string, extension: string): Promise<IS
         .sort((a, b) => +a.title - +b.title);
 }
 
-export async function getTheoryPath(levelPath: string): Promise<string | undefined> {
-    const theoryPath = levelPath + '/теория.pdf';
+export async function getTheoryPath(testPath: string): Promise<string | undefined> {
+    const theoryPath = testPath + '/теория.pdf';
     const hasTheory = await fs.existsAssets(theoryPath);
 
     return hasTheory ? theoryPath : undefined;

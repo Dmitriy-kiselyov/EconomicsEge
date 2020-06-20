@@ -37,21 +37,10 @@ const multiLangTasksCount: IMultiLang = {
 export const TestInfoPresenter: React.FC<ITestSnippetPropsWithConnect> = props => {
     const dispatch = useDispatch();
     const { levels, test, statusCount } = props;
+    const { theory } = test;
 
     const Levels = levels.map((level, i) => {
-        const { theory } = level;
         const { correct, wrong } = statusCount[i];
-
-        const TheoryButton = theory ? (
-            <Button
-                style={styles.marginBottom}
-                title="Теория"
-                size="m"
-                outline
-                delay
-                onClick={() => dispatch(openTheory(level.id))}
-            />
-        ) : null;
 
         return (
             <View key={level.title} style={i < levels.length - 1 ? styles.marginRight : null}>
@@ -78,6 +67,17 @@ export const TestInfoPresenter: React.FC<ITestSnippetPropsWithConnect> = props =
         )
     });
 
+    const TheoryButton = theory ? (
+        <Button
+            style={styles.marginRight}
+            title="Теория"
+            size="m"
+            outline
+            delay
+            onClick={() => dispatch(openTheory(test.title))}
+        />
+    ) : null;
+
     return (
         <View style={props.style}>
             <Title size="m" title={test.title} />
@@ -87,6 +87,7 @@ export const TestInfoPresenter: React.FC<ITestSnippetPropsWithConnect> = props =
                 style={styles.scroll}
             >
                 <View style={styles.scrollContent}>
+                    {TheoryButton}
                     {Levels}
                 </View>
             </ScrollView>
@@ -126,7 +127,7 @@ const styles = StyleSheet.create({
     },
     scrollContent: {
         flexDirection: 'row',
-        alignItems: 'flex-end',
+        alignItems: 'flex-start',
         paddingHorizontal: margins.l,
     },
     info: {
