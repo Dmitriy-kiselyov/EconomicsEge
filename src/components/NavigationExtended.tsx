@@ -9,13 +9,16 @@ import { openTheory } from '../store/openTheory';
 import { IFulfilledStore } from '../typings/store';
 import { openSettings } from '../store/openSettings';
 import { findTest } from '../store/findTest';
+import { openSample } from '../store/openSample';
 
 export const NavigationExtended: React.FC<{}> = () => {
     const dispatch = useDispatch();
     const level = useSelector((state: IFulfilledStore) => state.openedLevel && state.levels[state.openedLevel]);
     const test = useSelector((state: IFulfilledStore) => state.openedTest && findTest(state, state.openedTest));
     const openedTheory = useSelector((state: IFulfilledStore) => state.openedTheory);
+    const openedSample = useSelector((state: IFulfilledStore) => state.openedSample);
     const openedSettings = useSelector((state: IFulfilledStore) => state.openedSettings);
+    const openedScreen = openedTheory || openedSample || openedSettings;
 
     const buttons: React.ReactElement[] = [];
     let first = true;
@@ -27,13 +30,19 @@ export const NavigationExtended: React.FC<{}> = () => {
         first = false;
     }
 
-    if (level && (test && test.theory) && !openedTheory && !openedSettings) {
+    if (level && (test && test.theory) && !openedScreen) {
         const handleOpenTheory = () => dispatch(openTheory(test.title));
 
         pushButton("Теория", handleOpenTheory);
     }
 
-    if (!openedTheory && !openedSettings) {
+    if (level && level.sample && !openedScreen) {
+        const handleOpenSample = () => dispatch(openSample(level.id));
+
+        pushButton("Образец", handleOpenSample);
+    }
+
+    if (!openedScreen) {
         pushButton('Настройки', () => dispatch(openSettings()));
     }
 

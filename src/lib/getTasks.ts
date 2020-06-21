@@ -74,6 +74,7 @@ async function getTestTasks(tasks: IStoreTasks): Promise<ITestTasks> {
                 title: level.name,
                 testTitle: test.name,
                 tasks: tasksOutput.map(task => task.path),
+                sample: await getSamplePath(level.path),
             }
         }
 
@@ -113,10 +114,18 @@ export async function getFileOutput(path: string, extension: string): Promise<IS
 }
 
 export async function getTheoryPath(testPath: string): Promise<string | undefined> {
-    const theoryPath = testPath + '/теория.pdf';
-    const hasTheory = await fs.existsAssets(theoryPath);
+    return getPdfPath(testPath, 'теория');
+}
 
-    return hasTheory ? theoryPath : undefined;
+export async function getSamplePath(levelPath: string): Promise<string | undefined> {
+    return getPdfPath(levelPath, 'образец');
+}
+
+export async function getPdfPath(path: string, fileName: string): Promise<string | undefined> {
+    const filePath = `${path}/${fileName}.pdf`;
+    const hasPdf = await fs.existsAssets(filePath);
+
+    return hasPdf ? filePath : undefined;
 }
 
 function getFileName(fileName: string): string {

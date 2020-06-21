@@ -14,6 +14,7 @@ import { closeTheory } from '../store/closeTheory';
 import { IActions } from '../typings/actions';
 import { closeSettings } from '../store/closeSettings';
 import { closeExam } from '../store/closeExam';
+import { closeSample } from '../store/closeSample';
 
 const fontL = 35;
 const fontM = 20;
@@ -25,6 +26,7 @@ interface IConnectProps {
     level: string | null;
     task: string | null;
     theory: boolean;
+    sample: boolean;
     settings: boolean;
 }
 
@@ -61,7 +63,7 @@ class NavigationPresenter extends BackListener<INavigationPropsWithConnect> {
     }
 
     private getSiblings(): ISibling[] {
-        const { test, exam, level, task, theory, settings } = this.props;
+        const { test, exam, level, task, theory, sample, settings } = this.props;
         const siblings: ISibling[] = [];
 
         test && siblings.push({
@@ -88,6 +90,11 @@ class NavigationPresenter extends BackListener<INavigationPropsWithConnect> {
             text: 'Теория',
             onClose: closeTheory
         });
+
+        sample && siblings.push({
+            text: 'Образец',
+            onClose: closeSample
+        })
 
         settings && siblings.push({
             text: 'Настройки',
@@ -210,6 +217,7 @@ export const Navigation = connect(
         level: state.openedLevel ? state.levels[state.openedLevel].title : null,
         task: state.openedTask ? 'Задача ' + state.tasks[state.openedTask].title : null,
         theory: Boolean(state.openedTheory),
+        sample: Boolean(state.openedSample),
         settings: state.openedSettings
     })
 )(NavigationPresenter);

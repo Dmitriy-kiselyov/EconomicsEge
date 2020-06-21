@@ -44,7 +44,6 @@ export const TestInfoPresenter: React.FC<ITestSnippetPropsWithConnect> = props =
 
         return (
             <View key={level.title} style={i < levels.length - 1 ? styles.marginRight : null}>
-                {TheoryButton}
                 <Button
                     title={level.title}
                     size="m"

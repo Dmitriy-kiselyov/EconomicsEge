@@ -4,6 +4,7 @@ interface ICommonStore {
     openedLevel: string | null;
     openedTask: string | null;
     openedTheory: string | null;
+    openedSample: string | null;
     openedSettings: boolean;
 }
 
@@ -41,6 +42,7 @@ export interface IStoreLevel {
     id: string;
     title: string;
     testTitle: string;
+    sample?: string;
     tasks: string[];
 }
 

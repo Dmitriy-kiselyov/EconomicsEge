@@ -6,7 +6,7 @@ import { MainScreen } from './screens/MainScreen';
 import { TaskListScreen } from './screens/TaskListScreen';
 import { IStore } from '../typings/store';
 import { TaskScreen } from './screens/TaskScreen';
-import { TheoryScreen } from './screens/TheoryScreen';
+import { PdfScreen } from './screens/PdfScreen';
 import { margins } from '../lib/constants';
 import { NavigationExtended } from './NavigationExtended';
 import { SettingsScreen } from './screens/SettingsScreen';
@@ -17,6 +17,7 @@ interface IConnectProps {
     openedExam: string | null;
     openedTask: string | null;
     openedTheory: string | null;
+    openedSample: string | null;
     openedSettings: boolean;
 }
 
@@ -51,7 +52,11 @@ function getContent(props: IRootProps): IContent {
     }
 
     if (props.openedTheory) {
-        return { element: <TheoryScreen/>, navigation: true };
+        return { element: <PdfScreen path={props.openedTheory} />, navigation: true };
+    }
+
+    if (props.openedSample) {
+        return { element: <PdfScreen path={props.openedSample} />, navigation: true };
     }
 
     if (props.openedTask) {
@@ -77,6 +82,7 @@ export const Root = connect(
         openedLevel: state.openedLevel,
         openedTask: state.openedTask,
         openedTheory: state.openedTheory,
+        openedSample: state.openedSample,
         openedSettings: state.openedSettings,
         openedExam: state.openedExam
     })

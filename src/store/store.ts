@@ -1,11 +1,12 @@
 import { createStore } from 'redux';
 
-import { IFulfilledStore, IStore, IStoreTest } from '../typings/store';
+import { IFulfilledStore, IStore } from '../typings/store';
 import {
     ACTION_TYPES,
     IActionCloseTheory,
     IActionOpenExam,
     IActionOpenLevel,
+    IActionOpenSample,
     IActionOpenTask,
     IActionOpenTheory,
     IActions,
@@ -37,6 +38,10 @@ function reducer(state: IStore | undefined, action: IActions): IStore {
             return reduceOpenTheory(state as IFulfilledStore, action);
         case ACTION_TYPES.CLOSE_THEORY:
             return reduceCloseTheory(state, action);
+        case ACTION_TYPES.OPEN_SAMPLE:
+            return reduceOpenSample(state as IFulfilledStore, action);
+        case ACTION_TYPES.CLOSE_SAMPLE:
+            return reduceCloseSample(state as IFulfilledStore);
         case ACTION_TYPES.SET_TASK_STATE:
             return reduceSetTaskState(state as IFulfilledStore, action);
         case ACTION_TYPES.OPEN_SETTINGS:
@@ -137,6 +142,28 @@ function reduceCloseTheory(state: IStore, action: IActionCloseTheory): IStore {
     return newState;
 }
 
+function reduceOpenSample(state: IFulfilledStore, action: IActionOpenSample): IFulfilledStore {
+    const openedLevel = state.levels[action.levelId];
+
+    if (!openedLevel.sample) {
+        return state;
+    }
+
+    return {
+        ...state,
+        openedTest: openedLevel.testTitle,
+        openedLevel: openedLevel.id,
+        openedSample: openedLevel.sample,
+    }
+}
+
+function reduceCloseSample(state: IFulfilledStore): IFulfilledStore {
+    return {
+        ...state,
+        openedSample: null,
+    }
+}
+
 function reduceSetTaskState(state: IFulfilledStore, action: IActionSetTaskState): IStore {
     const task = state.tasks[action.path];
     const newTask = { ...task, state: action.state };
@@ -189,6 +216,7 @@ const initialStore: IStore = {
     openedLevel: null,
     openedTask: null,
     openedTheory: null,
+    openedSample: null,
     openedSettings: false,
 };
 
